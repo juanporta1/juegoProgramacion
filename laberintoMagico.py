@@ -1,6 +1,7 @@
 import keyboard,os
 from pynput import keyboard
 from colorama import Fore,Style,Back
+from playsound import playsound
 lab = [
     
         [1,1,1,1,1,1,1,1,1,1],
@@ -44,6 +45,7 @@ def movePlayer(key):
     elif key.char == "w" and lab[inLab - 1][inList] != 1 and lab[inLab - 1][inList] != 2:
         lab[inLab][inList] = 0
         lab[inLab - 1][inList] = 4
+        playsound("bit.wav")
     elif key.char == "w" and lab[inLab - 1][inList] == 2:
         lab[inLab][inList] = 0
         lab[inLab - 1][inList] = 4
@@ -55,6 +57,7 @@ def movePlayer(key):
     elif key.char == "s" and lab[inLab + 1][inList] != 1 and lab[inLab + 1][inList] != 2:
         lab[inLab][inList] = 0
         lab[inLab + 1][inList] = 4
+        playsound("bit.wav")
     elif key.char == "s" and lab[inLab + 1][inList] == 2:
         lab[inLab][inList] = 0
         lab[inLab + 1][inList] = 4
@@ -66,6 +69,7 @@ def movePlayer(key):
     elif key.char == "a" and lab[inLab][inList - 1] != 1 and lab[inLab][inList - 1] != 2:
         lab[inLab][inList] = 0
         lab[inLab][inList - 1] = 4
+        playsound("bit.wav")
     elif key.char == "a" and lab[inLab][inList - 1] == 2:
         lab[inLab][inList] = 0
         lab[inLab][inList - 1] = 4
@@ -77,12 +81,13 @@ def movePlayer(key):
     elif key.char == "d" and lab[inLab][inList + 1] != 1 and lab[inLab][inList + 1] != 2:
         lab[inLab][inList] = 0
         lab[inLab][inList + 1] = 4
+        playsound("bit.wav")
     elif key.char == "d" and lab[inLab][inList + 1] == 2:
         lab[inLab][inList] = 0
         lab[inLab][inList + 1] = 4
         listener.stop()
         print("Felicidades, has pasado el nivel, presion c para continuar")
-
+    
     draw(lab)
     
 def juego(key):

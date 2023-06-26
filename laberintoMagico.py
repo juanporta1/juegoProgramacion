@@ -2,23 +2,62 @@ import keyboard,os
 from pynput import keyboard
 from colorama import Fore,Style,Back
 from playsound import playsound
+import pygame
+
 lab = [
     
-        [1,1,1,1,1,1,1,1,1,1],
-        [1,2,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,1,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,4,1],
-        [1,1,1,1,1,1,1,1,1,1]    
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,4,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]   
 ]   
-    
+pygame.mixer.init()
 
+teclaPresionada = True  
+
+mover = pygame.mixer.Sound("bit.wav")
+    
 def draw(maps):
     display = ""
     for x in maps:
-        
+        display += "                               "
         for y in x:
             if y == 1:
                 display += Fore.MAGENTA + "# "
@@ -29,6 +68,7 @@ def draw(maps):
             elif y == 0:
                 display += "  "
         display += "\n"
+    os.system("cls")
     print(display)
 
 def getPlayerPosition(maps):
@@ -37,66 +77,78 @@ def getPlayerPosition(maps):
             if y == 4:
                 return (lab.index(x), x.index(y))
 def movePlayer(key):
-    os.system("cls")
+    global teclaPresionada
     inLab,inList = getPlayerPosition(lab)
+    
     
     if hasattr(key, "char") == False:
         print()
-    elif key.char == "w" and lab[inLab - 1][inList] != 1 and lab[inLab - 1][inList] != 2:
+    elif key.char == "w" and lab[inLab - 1][inList] != 1 and lab[inLab - 1][inList] != 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab - 1][inList] = 4
-        playsound("bit.wav")
-    elif key.char == "w" and lab[inLab - 1][inList] == 2:
+        teclaPresionada = False
+        mover.play()
+    elif key.char == "w" and lab[inLab - 1][inList] == 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab - 1][inList] = 4
+        teclaPresionada = False
         listener.stop()
-        print("Felicidades, has pasado el nivel, presion c para continuar")
+        
     
     if hasattr(key, "char") == False:
         print()    
-    elif key.char == "s" and lab[inLab + 1][inList] != 1 and lab[inLab + 1][inList] != 2:
+    elif key.char == "s" and lab[inLab + 1][inList] != 1 and lab[inLab + 1][inList] != 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab + 1][inList] = 4
-        playsound("bit.wav")
-    elif key.char == "s" and lab[inLab + 1][inList] == 2:
+        teclaPresionada = False
+        mover.play()
+    elif key.char == "s" and lab[inLab + 1][inList] == 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab + 1][inList] = 4
+        teclaPresionada = False
         listener.stop()
-        print("Felicidades, has pasado el nivel, presion c para continuar")
         
     if hasattr(key, "char") == False:
         print()    
-    elif key.char == "a" and lab[inLab][inList - 1] != 1 and lab[inLab][inList - 1] != 2:
+    elif key.char == "a" and lab[inLab][inList - 1] != 1 and lab[inLab][inList - 1] != 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab][inList - 1] = 4
-        playsound("bit.wav")
-    elif key.char == "a" and lab[inLab][inList - 1] == 2:
+        teclaPresionada = False
+        mover.play()
+        
+    elif key.char == "a" and lab[inLab][inList - 1] == 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab][inList - 1] = 4
+        teclaPresionada = False
         listener.stop()
-        print("Felicidades, has pasado el nivel, presion c para continuar")
+        
+        
     
     if hasattr(key, "char") == False:
         print()   
-    elif key.char == "d" and lab[inLab][inList + 1] != 1 and lab[inLab][inList + 1] != 2:
+    elif key.char == "d" and lab[inLab][inList + 1] != 1 and lab[inLab][inList + 1] != 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab][inList + 1] = 4
-        playsound("bit.wav")
-    elif key.char == "d" and lab[inLab][inList + 1] == 2:
+        teclaPresionada = False
+        mover.play()
+        teclaPresionada = 2
+    elif key.char == "d" and lab[inLab][inList + 1] == 2 and  teclaPresionada == True:
         lab[inLab][inList] = 0
         lab[inLab][inList + 1] = 4
-        listener.stop()
-        print("Felicidades, has pasado el nivel, presion c para continuar")
+        teclaPresionada = False
+        listener.stop()    
     
     draw(lab)
     
 def juego(key):
-    print(key)
+    
     movePlayer(key)
+def reset(key):
+    global teclaPresionada
+    teclaPresionada = True
 draw(lab)
-g = 1
-
-listener = keyboard.Listener(on_press=movePlayer)
+listener = keyboard.Listener(on_press=juego, on_release=reset)
 listener.start()
 listener.join()
 
+pygame.mixer.quit()

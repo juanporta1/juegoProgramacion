@@ -1,6 +1,7 @@
 from pynput import keyboard
 import os
 
+
 select = 0
 def menu(key = None):
     global select

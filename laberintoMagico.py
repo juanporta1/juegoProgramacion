@@ -1,7 +1,6 @@
 import keyboard,os
 from pynput import keyboard
 from colorama import Fore,Style,Back
-from playsound import playsound
 import pygame
 
 lab = [

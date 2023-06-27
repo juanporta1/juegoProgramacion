@@ -2,6 +2,7 @@ import keyboard,os
 from pynput import keyboard
 from colorama import Fore,Style,Back
 import pygame
+import shutil
 
 lab = [
     
@@ -51,12 +52,14 @@ pygame.mixer.init()
 
 teclaPresionada = True  
 
-mover = pygame.mixer.Sound("bit.wav")
+mover = pygame.mixer.Sound("C:/Users/Juan Porta C/Desktop/Juego Laberinto Magico/pruebas/bit.wav")
     
 def draw(maps):
+    ancho,_ = shutil.get_terminal_size()
+    espacios = (ancho - len(lab[0])) // 2
     display = ""
     for x in maps:
-        display += "                               "
+        display += " " * espacios
         for y in x:
             if y == 1:
                 display += Fore.MAGENTA + "# "
@@ -66,9 +69,12 @@ def draw(maps):
                 display += Fore.RED + "@ "
             elif y == 0:
                 display += "  "
+        
+        
         display += "\n"
     os.system("cls")
-    print(display)
+    
+    print()
 
 def getPlayerPosition(maps):
     for x in maps:

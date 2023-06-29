@@ -3,7 +3,7 @@ import shutil
 texto = "Hola, mundo!"
 
 # Obtener el ancho de la consola
-ancho_consola, _ = shutil.get_terminal_size()
+ancho_consola, alto = shutil.get_terminal_size()
 
 # Calcular la cantidad de espacios necesarios para centrar el texto
 espacios = (ancho_consola - len(texto)) // 2
@@ -12,4 +12,4 @@ espacios = (ancho_consola - len(texto)) // 2
 texto_centralizado = " " * espacios + texto
 
 # Imprimir el texto centrado en la consola
-print(texto_centralizado)
+print(texto_centralizado, alto)

@@ -74,7 +74,7 @@ def draw(maps):
         display += "\n"
     os.system("cls")
     
-    print()
+    print(maps)
 
 def getPlayerPosition(maps):
     for x in maps:

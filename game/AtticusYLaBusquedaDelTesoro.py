@@ -5,9 +5,9 @@ from colorama import Fore,Back,Style
 anchoConsola,_ = shutil.get_terminal_size()
 select = 0
 
-def centrar(mensaje):
+def centrar(mensaje, bajadas = 0):
     espacios = (anchoConsola - len(mensaje)) // 2
-    mensaje = " " * espacios + mensaje
+    mensaje = "\n" * bajadas + " "  * espacios + mensaje
     return mensaje
 #Pantalla al iniciar el juego
 def pantallaDeInicio(key = "s"):
@@ -59,34 +59,40 @@ def menu(key = None):
     print(op2)
     print(op3)
     if key == keyboard.Key.space or key == keyboard.Key.enter:
+        listenerMenu.stop()
         
-        return select
 
  
         
-pantallaDeInicio()
-listener = keyboard.Listener(on_press=pantallaDeInicio)
-listener.start()
-listener.join()
+
 
 
 
     
     
-def menuPrincipal(key = "a sss"):    
-    op = menu(key)
-    
-    if op == 0:
-        print("A entrado al modo historia")
-        listenerMenu.stop()
-    elif op == 1:
-        print("A entrado al modo multijugador")
-        listenerMenu.stop()
-    elif op == 2:
-        print("Gracias por Jugar")
-        listenerMenu.stop()
 
-menuPrincipal()
-listenerMenu = keyboard.Listener(on_press=menuPrincipal)
-listenerMenu.start()
-listenerMenu.join()
+        
+
+
+
+while True: 
+    pantallaDeInicio()
+    listener = keyboard.Listener(on_press=pantallaDeInicio)
+    listener.start()
+    listener.join()
+    
+    menu()
+    listenerMenu = keyboard.Listener(on_press=menu)
+    listenerMenu.start()
+    listenerMenu.join()
+    
+    if select == 0:
+        print("Holaaa") 
+    elif select == 1:
+        os.system("cls")
+        print(centrar("Holaaa",6))
+        time.sleep(5)
+    elif select == 2: 
+        os.system("cls")
+        print(centrar("Muchas Gracias Por Jugar",6))
+        break

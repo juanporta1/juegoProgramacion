@@ -285,11 +285,11 @@ def efectoMaquina(texto):
             print(caracter, end='', flush=True)
             continue
         print(caracter, end='', flush=True) 
-        maquinaDeEscribir1.play()
         ran = 1
         while ran >= 0.2:
             ran = random.random()
         time.sleep(math.fabs(ran))
+        
     print() 
 
 def pedirInfo(texto,centrarVer = False):
@@ -327,9 +327,9 @@ while True:
         anno = pedirInfo("Ingresa tu curso(numero y letra): ")
         
         os.system("cls")
-        print(centrarV(centrarH(Fore.LIGHTMAGENTA_EX + "INFORMACION")))
+        print(centrarH(Fore.LIGHTMAGENTA_EX + "INFORMACION", 10))
         print()
-        print(Fore.LIGHTWHITE_EX + centrarH("W/↑: ARRIBA") + "\n" + centrarH("S/↓: ABAJO") + "\n" + centrarH("D/→: DERECHA") + "\n" +centrarH("A/←: IZQUIERDA"))
+        print(Fore.LIGHTWHITE_EX + centrarH("W/↑: ARRIBA",2) + "\n" + centrarH("S/↓: ABAJO") + "\n" + centrarH("D/→: DERECHA") + "\n" +centrarH("A/←: IZQUIERDA"))
         print()
         print(Fore.GREEN + centrarH("X" + Fore.LIGHTWHITE_EX + ":SALIDA") + "\n" + Fore.RED + centrarH("@" + Fore.LIGHTWHITE_EX + "JUGADOR") + "\n" + Fore.BLUE + centrarH("O" + Fore.LIGHTWHITE_EX + "POZO"))
     

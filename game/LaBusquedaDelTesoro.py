@@ -43,8 +43,8 @@ def menu(key = None):
     os.system("cls")
     
     op1 = "JUGAR HISTORIA"
-    op2 = "MULTIJUGADOR"
-    op3 = "SALIR"
+    op2 = "MULTIJUGADOR  "
+    op3 = "SALIR         "
     
     if hasattr(key, "char") == False:
         g = 1
@@ -79,18 +79,55 @@ def menu(key = None):
     if verificarAtributo(key) == "c":
         listenerMenu.stop()
         
-  
+def hacedorDeMenues(**ops):
+    
+    select = 0
+    listener = keyboard.Listener(on_press=seleccion)
+    listener.start()
+    listener.join()
+    
+    def seleccion(key):
+        clon = ops
+        c = 0
+        mayop = 0
+        for op in clon:
+            if c == 0 or len(op) > mayop:
+                mayop = op
+            
+        for op in clon:
+            espacios = mayop - len(op)
+            op = op + espacios * " "
+        
+        if key == keyboard.Key.up:
+            if select == 0:
+                select = len(clon) - 1
+            else:
+                select -= 1
+        if key == keyboard.Key.down:
+            if select == len(clon) - 1:
+                select = 0
+            else:
+                select += 1
+                        
+        
+        clon[select] = "-> " + clon[select]
+        
+        for op in clon:
+            print(centrarH(op))
+        
+
+        
 def seleccionarDificultad(key = None):
     global dificultad
     os.system("cls")
     print(centrarH(Fore.LIGHTBLUE_EX + "  SELECCIONE LA DIFICULTAD", 12) + "\n\n\n\n")
     op1 =  "PRINCIPIANTE"
-    op2 =  "INTERMEDIO"
-    op3 =  "EXPERTO"
+    op2 =  "INTERMEDIO  "
+    op3 =  "EXPERTO     "
     
     if hasattr(key, "char") == False:
         g = 1
-    elif key.char == "w": 
+    elif key.char == keyboard.Key.up: 
         if dificultad == 0:
             dificultad = 2
         else:
@@ -327,11 +364,13 @@ while True:
         anno = pedirInfo("Ingresa tu curso(numero y letra): ")
         
         os.system("cls")
-        print(centrarH(Fore.LIGHTMAGENTA_EX + "INFORMACION", 10))
+        espacios = (anchoConsola - len("informacion"))// 2
+        saltos = (altoConsola - 11) // 2
+        print("\n" * saltos + " " * espacios + Fore.LIGHTMAGENTA_EX + "INFORMACION")
         print()
-        print(Fore.LIGHTWHITE_EX + centrarH("W/↑: ARRIBA",2) + "\n" + centrarH("S/↓: ABAJO") + "\n" + centrarH("D/→: DERECHA") + "\n" +centrarH("A/←: IZQUIERDA"))
+        print(espacios * " " + Fore.LIGHTWHITE_EX + "W/↑: ARRIBA" + "\n" + espacios * " "  + "S/↓: ABAJO" + "\n" + espacios * " " + "D/→: DERECHA" + "\n" + espacios * " " + "A/←: IZQUIERDA")
         print()
-        print(Fore.GREEN + centrarH("X" + Fore.LIGHTWHITE_EX + ":SALIDA") + "\n" + Fore.RED + centrarH("@" + Fore.LIGHTWHITE_EX + "JUGADOR") + "\n" + Fore.BLUE + centrarH("O" + Fore.LIGHTWHITE_EX + "POZO"))
+        print(espacios * " " + Fore.GREEN + "X" + Fore.LIGHTWHITE_EX + ":SALIDA" + "\n" + espacios * " " + Fore.RED + "@" + Fore.LIGHTWHITE_EX + "JUGADOR" + "\n" + espacios * " " + Fore.BLUE + "O" + Fore.LIGHTWHITE_EX + "POZO")
     
         time.sleep(8)
         
@@ -361,7 +400,7 @@ while True:
             print(centrarV(centrarH(Fore.LIGHTRED_EX + "IMPORTANTE: AL PRINCIPIO NO VERAS LOS POZOS, PERO SI TE CAES EN UNO, SABRAS DONDE ESTA, AUNQUE COMENZARAS DESDE EL PRINCIPIO.")))
             time.sleep(4)
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
             
             
                   
@@ -378,7 +417,7 @@ while True:
             draw(labs[dificultad][nivel])
             jugarNivel()  
             os.system("cls")
-            efectoMaquina(centrarV(centrarH(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.")))
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.")))
             time.sleep(2)
             os.system("cls")
             
@@ -389,30 +428,30 @@ while True:
             
             
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("¡Bien hecho! Haz logrado pasar el primer laberinto, pero ten cuidado,  el próximo te puede sorprender con trampas que te harán iniciar de nuevo.")))
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Haz logrado pasar el primer laberinto, pero ten cuidado,  el próximo te puede sorprender con trampas que te harán iniciar de nuevo.")))
             time.sleep(2)
             os.system("cls")
             print(centrarV(centrarH(Fore.LIGHTRED_EX + "IMPORTANTE: AL PRINCIPIO NO VERAS LAS TRAMPAS, PERO SI TE CAES EN UNA, DESCUBRIRAS DONDE SE ENCONTRABA, AUNQUE COMENZARAS DESDE EL PRINCIPIO.")))
             time.sleep(4)
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
             time.sleep(2)
             
                   
             draw(labs[dificultad][nivel])
             jugarNivel()
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto? Este será aun mas difícil."))) 
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto? Este será aun mas difícil."))) 
             time.sleep(2)
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
             time.sleep(2)
             
             
             draw(labs[dificultad][nivel])
             jugarNivel()  
             os.system("cls")
-            efectoMaquina(centrarV(centrarH(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro")))
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro")))
             time.sleep(2)
             os.system("cls")
         
@@ -421,23 +460,23 @@ while True:
             draw(labs[dificultad][nivel])
             jugarNivel()
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,")) + "\n" +  centrarH("los próximos serán más difíciles, y te encontraras con trampas que te harán volver a la entrada"))
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,")) + "\n" +  centrarH("los próximos serán más difíciles, y te encontraras con trampas que te harán volver a la entrada"))
             time.sleep(2)
             os.system("cls")
             print(centrarV(centrarH(Fore.LIGHTRED_EX + "IMPORTANTE: AL PRINCIPIO NO VERAS LOS POZOS, PERO SI TE CAES EN UNO, SABRAS DONDE ESTA, AUNQUE COMENZARAS DESDE EL PRINCIPIO.")))
             time.sleep(4)
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
             time.sleep(2)
             
             draw(labs[dificultad][nivel])
             jugarNivel()
-            efectoMaquina(centrarV(centrarH("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, pero ahora será más difícil tendrás que lidiar con trampas y puertas mágicas."))) 
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, pero ahora será más difícil tendrás que lidiar con trampas y puertas mágicas."))) 
             
             print(centrarV(centrarH(Fore.LIGHTRED_EX + "IMPORTANTE: AL PRINCIPIO NO VERAS LOS POZOS, PERO SI TE CAES EN UNO, SABRAS DONDE ESTA, AUNQUE COMENZARAS DESDE EL PRINCIPIO.")))
             time.sleep(4)
             os.system("cls")
-            efectoMaquina(centrarV(centrarH("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
             time.sleep(2)
             
             os.system("cls")
@@ -447,7 +486,7 @@ while True:
             
             draw(labs[dificultad][nivel])
             jugarNivel()  
-            efectoMaquina(centrarV(centrarH(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.")))
+            efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.")))
             os.system("cls")
             time.sleep(2)
             

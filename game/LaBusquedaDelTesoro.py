@@ -10,9 +10,10 @@ anchoConsola, altoConsola = shutil.get_terminal_size()
 select = 0  
 dificultad = 0
 nivel = 0
+c = 0
 teclaPresionada = True
 ultimoRenderizado = time.time()
-
+display = ""
 
 #Funciones para centrar en la consola
 def centrarH(mensaje, bajadas = 0):
@@ -25,142 +26,66 @@ def centrarV(mensaje):
     mensaje = "\n" * bajadas  + mensaje
     return mensaje
 
-#Pantalla al iniciar el juego
-def pantallaDeInicio(key = "s"):
-    os.system("cls")
-    mensaje = Fore.CYAN + "PRESIONE C PARA COMENZAR"
-    espacios = (anchoConsola - len(mensaje)) // 2
-    mensaje = " " * espacios + mensaje
+def presion(key):
+    if key == keyboard.Key.delete or key == keyboard.Key.ctrl_l or key == keyboard.Key.alt_l or key == keyboard.Key.shift or key == keyboard.Key.alt_r or key == keyboard.Key.alt_gr or key == keyboard.Key.ctrl_r or key == keyboard.Key.shift_l or key == keyboard.Key.shift_r:
+        return True
+    else:
+        return False
+      
+def creadorDeMenues(ops):
     
-    print(centrarV(mensaje))
-    if verificarAtributo(key) == "c":
-            listener.stop()  
-            os.system("cls")
-            
-            
-def menu(key = None):
-    global select
-    os.system("cls")
-    
-    op1 = "JUGAR HISTORIA"
-    op2 = "MULTIJUGADOR  "
-    op3 = "SALIR         "
-    
-    if hasattr(key, "char") == False:
-        g = 1
-    elif key.char == "w":
-        if select == 0:
-            select = 2
-        else:
-            select -= 1
-    elif key.char == "s":
-        if select == 2:
-            select = 0
-        else:
-            select += 1
-            
-    if select == 0:
-        op2 = "   " + op2
-        op3 = "   " + op3
-        op1 = "-> " + op1
-    elif select == 1:
-        op3 = "   " + op3
-        op1 = "   " + op1
-        op2 = "-> " + op2
-    elif select == 2:
-        op1 = "   " + op1
-        op2 = "   " + op2
-        op3 = "-> " + op3
+    selector = 0
+    def seleccion(key = None):
+        nonlocal selector
+        c = 0
+        clon = []
+        for op in ops:
+            clon.append(op)
         
-    print(centrarV(centrarH(op1)))
-    print(centrarH(op2))
-    print(centrarH(op3))
-    print(centrarH("PRESIONE C PARA SLECCIONAR", 2))
-    if verificarAtributo(key) == "c":
-        listenerMenu.stop()
+        mayop = len(max(ops, key=len))    
+        for i,op in enumerate(clon):
+            espacios = mayop - len(op)
+            clon[i] = op + " " * espacios
+            
         
-def hacedorDeMenues(**ops):
+        if key == keyboard.Key.up:
+            if selector == 0:
+                selector = len(clon) - 1
+            else:
+                selector -= 1
+        if key == keyboard.Key.down:
+            if selector == len(clon) - 1:
+                selector = 0
+            else:
+                selector += 1
+        if presion(key):  
+            listener.stop()
+            
+            
+        os.system("cls")
+        print(centrarH(Fore.CYAN + "SELECCIONE UNA OPCION",10))
+        print("\n")
+        for op in clon:
+            if op != clon[selector]:
+                print(centrarH(Fore.CYAN + "   " + op))
+            else:
+                print(centrarH(Fore.CYAN + "-> " + clon[selector]))
+                
+        print(centrarH("PRESIONE SHIFT/CTRL PARA SELECCIONAR", 3))
+
     
-    select = 0
+    
+    seleccion()
     listener = keyboard.Listener(on_press=seleccion)
+    listener.suppress
     listener.start()
     listener.join()
     
-    def seleccion(key):
-        clon = ops
-        c = 0
-        mayop = 0
-        for op in clon:
-            if c == 0 or len(op) > mayop:
-                mayop = op
-            
-        for op in clon:
-            espacios = mayop - len(op)
-            op = op + espacios * " "
-        
-        if key == keyboard.Key.up:
-            if select == 0:
-                select = len(clon) - 1
-            else:
-                select -= 1
-        if key == keyboard.Key.down:
-            if select == len(clon) - 1:
-                select = 0
-            else:
-                select += 1
-                        
-        
-        clon[select] = "-> " + clon[select]
-        
-        for op in clon:
-            print(centrarH(op))
-        
-
-        
-def seleccionarDificultad(key = None):
-    global dificultad
+    
     os.system("cls")
-    print(centrarH(Fore.LIGHTBLUE_EX + "  SELECCIONE LA DIFICULTAD", 12) + "\n\n\n\n")
-    op1 =  "PRINCIPIANTE"
-    op2 =  "INTERMEDIO  "
-    op3 =  "EXPERTO     "
-    
-    if hasattr(key, "char") == False:
-        g = 1
-    elif key.char == keyboard.Key.up: 
-        if dificultad == 0:
-            dificultad = 2
-        else:
-            dificultad -= 1
-    elif key.char == "s":
-        if dificultad == 2:
-            dificultad = 0
-        else:
-            dificultad += 1
-            
-    if dificultad == 0:
-        op3 = Fore.CYAN + "   " + op3
-        op2 = Fore.CYAN + "   " + op2
-        op1 = Fore.CYAN + "-> " + op1
-    elif dificultad == 1:
-        op1 = Fore.CYAN + "   " + op1
-        op2 = Fore.CYAN + "-> " + op2
-        op3 = Fore.CYAN + "   " + op3
-    elif dificultad == 2:
-        op3 = Fore.CYAN + "-> " + op3
-        op2 = Fore.CYAN + "   " + op2
-        op1 = Fore.CYAN + "   " + op1
-    
-        
-    print(centrarH(op1))
-    print(centrarH(op2))
-    print(centrarH(op3))
-    print(centrarH("PRESIONE C PARA SLECCIONAR", 2))
-    
-    if verificarAtributo(key) == "c":
-        listener.stop()
+    return selector
 
-def draw(maps):
+def dibujarLaberinto(maps):
     #? 0 = Espacio Vacio
     #? 1 = Pared
     #? 2 = Meta
@@ -187,11 +112,13 @@ def draw(maps):
         espacios = (ancho - len(x))// 2
         linea = " " * math.trunc((espacios / 1.25)) + linea
         display += linea + "\n"
+    
+    
     os.system("cls")
     print(display)
-    print(centrarH(Fore.LIGHTCYAN_EX + "W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",4))
+    print(centrarH(Fore.LIGHTCYAN_EX + "        W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",4))
     
-def getPlayerPosition(maps):
+def obtenerPosicionDelJugador(maps):
     for x in maps:
         for y in x:
             if y == 5:
@@ -205,9 +132,9 @@ def verificarAtributo(key):
 
     
 
-def movePlayer(key):
+def moverJugador(key):
     global teclaPresionada,nivel,dificultad,laberinto
-    inLab,inList = getPlayerPosition(laberinto)
+    inLab,inList = obtenerPosicionDelJugador(laberinto)
 
     #* Movimiento Arriba 
     
@@ -300,20 +227,21 @@ def movePlayer(key):
         print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO,Y HAS VUELTO A LA ENTRADA \n TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
         
-    draw(laberinto)
+    dibujarLaberinto(laberinto)
 
 def reset(key = None):
-    global teclaPresionada
+    global teclaPresionada,c
     teclaPresionada = True
+    c += 1
 
 def jugarNivel():
     global nivel,listenerJuego,laberinto,posInicialX,posInicialY
     laberinto = copy.deepcopy(labs[dificultad][nivel])
-    posInicialX,posInicialY = getPlayerPosition(laberinto)
-    listenerJuego = keyboard.Listener(on_press=movePlayer, on_release=reset)
+    posInicialX,posInicialY = obtenerPosicionDelJugador(laberinto)
+    listenerJuego = keyboard.Listener(on_press=moverJugador, on_release=reset)
     listenerJuego.start()
     listenerJuego.join()
-    
+    c = 0
     nivel += 1
     
 def efectoMaquina(texto):
@@ -338,26 +266,26 @@ def pedirInfo(texto,centrarVer = False):
         var = input(texto)
     return var
 
-while True: 
-    nivel = 0
-    dificultad = 0
-    select = 0
-    pantallaDeInicio()
-    listener = keyboard.Listener(on_press=pantallaDeInicio)
+def pantallaIncio():
+    os.system("cls")
+    print(centrarV(centrarH(Fore.CYAN + "PRESIONE SHIFT/CTRL PARA COMENZAR")))
+    def click(key):
+        
+        if presion(key):
+            listener.stop()
+    listener = keyboard.Listener(on_press=click)
     listener.start()
     listener.join()
     
-    menu()
-    listenerMenu = keyboard.Listener(on_press=menu)
-    listenerMenu.start()
-    listenerMenu.join()
+while True: 
+    nivel = 0
     
+    pantallaIncio()
+    
+    select = creadorDeMenues(["JUGAR HISTORIA","MULTIJUGADOR","SALIR"])
     if select == 0:
-        seleccionarDificultad()
-        listener = keyboard.Listener(on_press=seleccionarDificultad) 
-        listener.start()
-        listener.join()
-        
+        print()
+        dificultad = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","EXPERTO"])
         os.system("cls")
         
         nombreJugador = pedirInfo(Fore.LIGHTWHITE_EX + "Ingresa tu nombre, explorador: ",True)
@@ -370,7 +298,7 @@ while True:
         print()
         print(espacios * " " + Fore.LIGHTWHITE_EX + "W/↑: ARRIBA" + "\n" + espacios * " "  + "S/↓: ABAJO" + "\n" + espacios * " " + "D/→: DERECHA" + "\n" + espacios * " " + "A/←: IZQUIERDA")
         print()
-        print(espacios * " " + Fore.GREEN + "X" + Fore.LIGHTWHITE_EX + ":SALIDA" + "\n" + espacios * " " + Fore.RED + "@" + Fore.LIGHTWHITE_EX + "JUGADOR" + "\n" + espacios * " " + Fore.BLUE + "O" + Fore.LIGHTWHITE_EX + "POZO")
+        print(espacios * " " + Fore.GREEN + "X" + Fore.LIGHTWHITE_EX + ":SALIDA" + "\n" + espacios * " " + Fore.RED + "@" + Fore.LIGHTWHITE_EX + ":JUGADOR" + "\n" + espacios * " " + Fore.BLUE + "O" + Fore.LIGHTWHITE_EX + ":POZO")
     
         time.sleep(8)
         
@@ -390,7 +318,7 @@ while True:
         
         if dificultad == 0:
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
             
             os.system("cls")
@@ -404,7 +332,7 @@ while True:
             
             
                   
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
             os.system("cls")
             efectoMaquina(centrarV(centrarH("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto."))) 
@@ -414,7 +342,7 @@ while True:
             
             
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()  
             os.system("cls")
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.")))
@@ -423,7 +351,7 @@ while True:
             
         elif dificultad == 1:
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
             
             
@@ -438,7 +366,7 @@ while True:
             time.sleep(2)
             
                   
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
             os.system("cls")
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto? Este será aun mas difícil."))) 
@@ -448,7 +376,7 @@ while True:
             time.sleep(2)
             
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()  
             os.system("cls")
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro")))
@@ -457,7 +385,7 @@ while True:
         
         elif dificultad == 2:
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
             os.system("cls")
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,")) + "\n" +  centrarH("los próximos serán más difíciles, y te encontraras con trampas que te harán volver a la entrada"))
@@ -469,7 +397,7 @@ while True:
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO")))  
             time.sleep(2)
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + "¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, pero ahora será más difícil tendrás que lidiar con trampas y puertas mágicas."))) 
             
@@ -484,7 +412,7 @@ while True:
             time.sleep(4)
             os.system("cls")
             
-            draw(labs[dificultad][nivel])
+            dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()  
             efectoMaquina(centrarV(centrarH(Fore.LIGHTWHITE_EX + f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.")))
             os.system("cls")

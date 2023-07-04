@@ -1,1 +1,9 @@
-print("hola" + "_" * 3)
+import time
+
+inicio = time.time()
+
+time.sleep(3)
+
+final = time.time() - inicio
+
+print(final)

@@ -2,9 +2,14 @@ import os,time,pygame,shutil,copy
 from pynput import keyboard
 from colorama import Fore,Back,Style
 from niveles import labs
-import math,random,copy
+import math,random
+
+os.system('for /F %i in (requerimientos.txt) do pip install %i')
+
 pygame.mixer.init()
 
+archivoRanking = open("rankng.txt", "w+")
+ranking = archivoRanking.readlines()
 anchoConsola, altoConsola = shutil.get_terminal_size()
 select = 0  
 dificultad = 0
@@ -15,6 +20,8 @@ ultimoRenderizado = time.time()
 display = ""
 teclaPresionada1 = True
 teclaPresionada2 = True
+volverAlMenu = False
+pausa = 2
 #? SFX
 
 escribir1 = pygame.mixer.Sound("sonidos/maquinas/escribir1.wav")
@@ -89,7 +96,6 @@ def creadorDeMenues(ops):
     
     seleccion()
     listener = keyboard.Listener(on_press=seleccion)
-    listener.suppress
     listener.start()
     listener.join()
     
@@ -164,169 +170,187 @@ def jugarMultijugador():
     listener.join()
 
 def resetMulti(key):
+    global teclaPresionada1,teclaPresionada2
     teclaPresionada1 = True
     teclaPresionada2 = True
+    
+
+def topJugadores(lineas):
+    rank = []
+    for linea in lineas:
+        linea = linea.split(",")
+        rank.append(linea)
+    rank.sort(key=lambda x: float(x[2]),reverse=True)
+    return rank
+    
+
 def moverMultijugador(key):
         global teclaPresionada1,teclaPresionada2,clon1,clon2
         inLab1,inList1 = obtenerPosicionDelJugador(clon1)
         inLab2,inList2 = obtenerPosicionDelJugador(clon2)
         if verificarAtributo(key) == "w" or verificarAtributo(key) == "s" or verificarAtributo(key) == "a" or verificarAtributo(key) == "d":
-            if verificarAtributo(key) == "w" and clon1[inLab1 - 1][inList1] == 0 and  teclaPresionada == True:
+            if verificarAtributo(key) == "w" and clon1[inLab1 - 1][inList1] == 0 and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 - 1][inList1] = 5
                 teclaPresionada1 = False
-                
-            elif verificarAtributo(key) == "w" and clon1[inLab1 - 1][inList1] == 2 and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif verificarAtributo(key) == "w" and clon1[inLab1 - 1][inList1] == 2 and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 - 1][inList1] = 5
                 teclaPresionada1 = False
                 listenerJuego.stop()
-            elif verificarAtributo(key) == "w" and (clon1[inLab1 - 1][inList1] == 3 or clon1[inLab1 - 1][inList1] == 4) and teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif verificarAtributo(key) == "w" and (clon1[inLab1 - 1][inList1] == 3 or clon1[inLab1 - 1][inList1] == 4) and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 - 1][inList1] = 4
                 clon1[posInicialXMulti][posInicialYMulti] = 5
                 teclaPresionada1 = False
-                
+                dibujarMultijugador(clon1,clon2)
                 
             #* Movimiento Abajo     
             
-            if verificarAtributo(key) == "s" and clon1[inLab1 + 1][inList1] == 0 and  teclaPresionada == True :
+            if verificarAtributo(key) == "s" and clon1[inLab1 + 1][inList1] == 0 and  teclaPresionada1 == True :
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 + 1][inList1] = 5
                 teclaPresionada1 = False
-                
-            elif verificarAtributo(key) == "s" and clon1[inLab1 + 1][inList1] == 2 and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif verificarAtributo(key) == "s" and clon1[inLab1 + 1][inList1] == 2 and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 + 1][inList1] = 5
                 teclaPresionada1 = False
                 listenerJuego.stop()
-            
-            elif verificarAtributo(key) == "s" and (clon1[inLab1 + 1][inList1] == 3 or clon1[inLab1 + 1][inList1] == 4) and teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)    
+            elif verificarAtributo(key) == "s" and (clon1[inLab1 + 1][inList1] == 3 or clon1[inLab1 + 1][inList1] == 4) and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 + 1][inList1] = 4
                 teclaPresionada1 = False
                 clon1[posInicialXMulti][posInicialYMulti] = 5
-               
+                dibujarMultijugador(clon1,clon2)
             
             #* Movimiento Izquierda
                 
-            if verificarAtributo(key) == "a" and clon1[inLab1][inList1 - 1] == 0 and  teclaPresionada == True:
+            if verificarAtributo(key) == "a" and clon1[inLab1][inList1 - 1] == 0 and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 - 1] = 5
                 teclaPresionada1 = False
+                dibujarMultijugador(clon1,clon2)
                 
-                
-            elif verificarAtributo(key) == "a" and clon1[inLab1][inList1 - 1] == 2 and  teclaPresionada == True:
+            elif verificarAtributo(key) == "a" and clon1[inLab1][inList1 - 1] == 2 and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 - 1] = 5
                 teclaPresionada1 = False
                 listenerJuego.stop()
-            
-            elif verificarAtributo(key) == "a" and (clon1[inLab1][inList1 - 1] == 3 or clon1[inLab1][inList1 - 1] == 4) and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)            
+            elif verificarAtributo(key) == "a" and (clon1[inLab1][inList1 - 1] == 3 or clon1[inLab1][inList1 - 1] == 4) and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 - 1] = 4
                 teclaPresionada1 = False
                 clon1[posInicialXMulti][posInicialYMulti] = 5
+                dibujarMultijugador(clon1,clon2)
                 
             #* Movimiento Derecha 
             
-            if verificarAtributo(key) == "d" and clon1[inLab1][inList1 + 1] == 0 and teclaPresionada == True:
+            if verificarAtributo(key) == "d" and clon1[inLab1][inList1 + 1] == 0 and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 + 1] = 5
                 teclaPresionada1 = False
+                dibujarMultijugador(clon1,clon2)
                 
                 
-            elif verificarAtributo(key) == "d" and clon1[inLab1][inList1 + 1] == 2 and  teclaPresionada == True:
+            elif verificarAtributo(key) == "d" and clon1[inLab1][inList1 + 1] == 2 and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 + 1] = 5
                 teclaPresionada1 = False
                 listenerJuego.stop()    
-            elif verificarAtributo(key) == "d" and (clon1[inLab1][inList1 + 1] == 3 or clon1[inLab1][inList1 + 1] == 4) and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif verificarAtributo(key) == "d" and (clon1[inLab1][inList1 + 1] == 3 or clon1[inLab1][inList1 + 1] == 4) and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 + 1] = 4
                 teclaPresionada1 = False
                 clon1[posInicialXMulti][posInicialYMulti] = 5
-                
+                dibujarMultijugador(clon1,clon2)
                 
             #* Movimiento Arriba 
         elif key == keyboard.Key.up or key == keyboard.Key.right or key == keyboard.Key.down or key == keyboard.Key.left:
-            if key == keyboard.Key.up and clon2[inLab2 - 1][inList2] == 0 and  teclaPresionada == True:
+            if key == keyboard.Key.up and clon2[inLab2 - 1][inList2] == 0 and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 - 1][inList2] = 5
                 teclaPresionada2 = False
-                
-            elif key == keyboard.Key.up and clon2[inLab2 - 1][inList2] == 2 and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.up and clon2[inLab2 - 1][inList2] == 2 and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 - 1][inList2] = 5
                 teclaPresionada2 = False
                 listenerJuego.stop()
-            elif key == keyboard.Key.up and (clon2[inLab2 - 1][inList2] == 3 or clon2[inLab2 - 1][inList2] == 4) and teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.up and (clon2[inLab2 - 1][inList2] == 3 or clon2[inLab2 - 1][inList2] == 4) and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 - 1][inList2] = 4
                 clon2[posInicialXMulti][posInicialYMulti] = 5
                 teclaPresionada2 = False
-                
+                dibujarMultijugador(clon1,clon2)
                 
             #* Movimiento Abajo     
             
-            if key == keyboard.Key.down and clon2[inLab2 + 1][inList2] == 0 and  teclaPresionada == True :
+            if key == keyboard.Key.down and clon2[inLab2 + 1][inList2] == 0 and  teclaPresionada2 == True :
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 + 1][inList2] = 5
                 teclaPresionada2 = False
-                
-            elif key == keyboard.Key.down and clon2[inLab2 + 1][inList2] == 2 and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.down and clon2[inLab2 + 1][inList2] == 2 and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 + 1][inList2] = 5
                 teclaPresionada2 = False
                 listenerJuego.stop()
-            
-            elif key == keyboard.Key.down and (clon2[inLab2 + 1][inList2] == 3 or clon2[inLab2 + 1][inList2] == 4) and teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.down and (clon2[inLab2 + 1][inList2] == 3 or clon2[inLab2 + 1][inList2] == 4) and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 + 1][inList2] = 4
                 teclaPresionada2 = False
                 clon2[posInicialXMulti][posInicialYMulti] = 5
-                
+                dibujarMultijugador(clon1,clon2)
             
             #* Movimiento Izquierda
                 
-            if key == keyboard.Key.left and clon2[inLab2][inList2 - 1] == 0 and  teclaPresionada == True:
+            if key == keyboard.Key.left and clon2[inLab2][inList2 - 1] == 0 and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 - 1] = 5
                 teclaPresionada2 = False
+                dibujarMultijugador(clon1,clon2)
                 
-                
-            elif key == keyboard.Key.left and clon2[inLab2][inList2 - 1] == 2 and  teclaPresionada == True:
+            elif key == keyboard.Key.left and clon2[inLab2][inList2 - 1] == 2 and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 - 1] = 5
                 teclaPresionada2 = False
                 listenerJuego.stop()
-            
-            elif key == keyboard.Key.left and (clon2[inLab2][inList2 - 1] == 3 or clon2[inLab2][inList2 - 1] == 4) and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.left and (clon2[inLab2][inList2 - 1] == 3 or clon2[inLab2][inList2 - 1] == 4) and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 - 1] = 4
                 teclaPresionada2 = False
                 clon2[posInicialXMulti][posInicialYMulti] = 5
-                
+                dibujarMultijugador(clon1,clon2)
             #* Movimiento Derecha 
             
-            if key == keyboard.Key.right and clon2[inLab2][inList2 + 1] == 0 and teclaPresionada == True:
+            if key == keyboard.Key.right and clon2[inLab2][inList2 + 1] == 0 and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 + 1] = 5
                 teclaPresionada2 = False
-            
-            elif key == keyboard.Key.right and clon2[inLab2][inList2 + 1] == 2 and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.right and clon2[inLab2][inList2 + 1] == 2 and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 + 1] = 5
                 teclaPresionada2 = False
                 listenerJuego.stop()    
-            elif key == keyboard.Key.right and (clon2[inLab2][inList2 + 1] == 3 or clon2[inLab2][inList2 + 1] == 4) and  teclaPresionada == True:
+                dibujarMultijugador(clon1,clon2)
+            elif key == keyboard.Key.right and (clon2[inLab2][inList2 + 1] == 3 or clon2[inLab2][inList2 + 1] == 4) and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 + 1] = 4
                 teclaPresionada2 = False
                 clon2[posInicialXMulti][posInicialYMulti] = 5
+                dibujarMultijugador(clon1,clon2)
                 
-                
-        dibujarMultijugador(clon1,clon2)
+        
          
         
 def obtenerPosicionDelJugador(maps):
@@ -344,22 +368,23 @@ def verificarAtributo(key):
     
 
 def moverJugador(key):
-    global teclaPresionada,nivel,dificultad,laberinto
+    global teclaPresionada,nivel,dificultad,laberinto,volverAlMenu,pausa
     inLab,inList = obtenerPosicionDelJugador(laberinto)
 
     #* Movimiento Arriba 
     
-    if (key == keyboard.Key.up or verificarAtributo(key) == "w") and laberinto[inLab - 1][inList] == 0 and  teclaPresionada == True:
+    if (key == keyboard.Key.up or verificarAtributo(key) == "w") and laberinto[inLab - 1][inList] == 0 and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab - 1][inList] = 5
         teclaPresionada = False
-        
-    elif (key == keyboard.Key.up or verificarAtributo(key) == "w") and laberinto[inLab - 1][inList] == 2 and  teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.up or verificarAtributo(key) == "w") and laberinto[inLab - 1][inList] == 2 and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab - 1][inList] = 5
         teclaPresionada = False
         listenerJuego.stop()
-    elif (key == keyboard.Key.up or verificarAtributo(key) == "w") and (laberinto[inLab - 1][inList] == 3 or laberinto[inLab - 1][inList] == 4) and teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.up or verificarAtributo(key) == "w") and (laberinto[inLab - 1][inList] == 3 or laberinto[inLab - 1][inList] == 4) and teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab - 1][inList] = 4
         laberinto[posInicialX][posInicialY] = 5
@@ -368,21 +393,21 @@ def moverJugador(key):
         print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
         print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
-        
+        dibujarLaberinto(laberinto)
     #* Movimiento Abajo     
     
-    if (key == keyboard.Key.down or verificarAtributo(key) == "s") and laberinto[inLab + 1][inList] == 0 and  teclaPresionada == True :
+    if (key == keyboard.Key.down or verificarAtributo(key) == "s") and laberinto[inLab + 1][inList] == 0 and  teclaPresionada == True  and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab + 1][inList] = 5
         teclaPresionada = False
-        
-    elif (key == keyboard.Key.down or verificarAtributo(key) == "s") and laberinto[inLab + 1][inList] == 2 and  teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.down or verificarAtributo(key) == "s") and laberinto[inLab + 1][inList] == 2 and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab + 1][inList] = 5
         teclaPresionada = False
         listenerJuego.stop()
-    
-    elif (key == keyboard.Key.down or verificarAtributo(key) == "s") and (laberinto[inLab + 1][inList] == 3 or laberinto[inLab + 1][inList] == 4) and teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.down or verificarAtributo(key) == "s") and (laberinto[inLab + 1][inList] == 3 or laberinto[inLab + 1][inList] == 4) and teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab + 1][inList] = 4
         teclaPresionada = False
@@ -391,22 +416,22 @@ def moverJugador(key):
         print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
         print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
-    
+        dibujarLaberinto(laberinto)
     #* Movimiento Izquierda
         
-    if (key == keyboard.Key.left or verificarAtributo(key) == "a") and laberinto[inLab][inList - 1] == 0 and  teclaPresionada == True:
+    if (key == keyboard.Key.left or verificarAtributo(key) == "a") and laberinto[inLab][inList - 1] == 0 and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab][inList - 1] = 5
         teclaPresionada = False
+        dibujarLaberinto(laberinto)
         
-        
-    elif (key == keyboard.Key.left or verificarAtributo(key) == "a") and laberinto[inLab][inList - 1] == 2 and  teclaPresionada == True:
+    elif (key == keyboard.Key.left or verificarAtributo(key) == "a") and laberinto[inLab][inList - 1] == 2 and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab][inList - 1] = 5
         teclaPresionada = False
         listenerJuego.stop()
-    
-    elif (key == keyboard.Key.left or verificarAtributo(key) == "a") and (laberinto[inLab][inList - 1] == 3 or laberinto[inLab][inList - 1] == 4) and  teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.left or verificarAtributo(key) == "a") and (laberinto[inLab][inList - 1] == 3 or laberinto[inLab][inList - 1] == 4) and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab][inList - 1] = 4
         teclaPresionada = False
@@ -415,20 +440,21 @@ def moverJugador(key):
         print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
         print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
+        dibujarLaberinto(laberinto)
     #* Movimiento Derecha 
     
-    if (key == keyboard.Key.right or verificarAtributo(key) == "d") and laberinto[inLab][inList + 1] == 0 and teclaPresionada == True:
+    if (key == keyboard.Key.right or verificarAtributo(key) == "d") and laberinto[inLab][inList + 1] == 0 and teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab][inList + 1] = 5
         teclaPresionada = False
-        
-        teclaPresionada = 2
-    elif (key == keyboard.Key.right or verificarAtributo(key) == "d") and laberinto[inLab][inList + 1] == 2 and  teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.right or verificarAtributo(key) == "d") and laberinto[inLab][inList + 1] == 2 and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab][inList + 1] = 5
         teclaPresionada = False
         listenerJuego.stop()    
-    elif (key == keyboard.Key.right or verificarAtributo(key) == "d") and (laberinto[inLab][inList + 1] == 3 or laberinto[inLab][inList + 1] == 4) and  teclaPresionada == True:
+        dibujarLaberinto(laberinto)
+    elif (key == keyboard.Key.right or verificarAtributo(key) == "d") and (laberinto[inLab][inList + 1] == 3 or laberinto[inLab][inList + 1] == 4) and  teclaPresionada == True and pausa == 2:
         laberinto[inLab][inList] = 0
         laberinto[inLab][inList + 1] = 4
         teclaPresionada = False
@@ -437,8 +463,21 @@ def moverJugador(key):
         print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
         print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO,Y HAS VUELTO A LA ENTRADA \n TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
-        
-    dibujarLaberinto(laberinto)
+        dibujarLaberinto(laberinto)
+    
+    elif verificarAtributo(key) == "p":
+        time.sleep(0.5)
+        os.system("cls")
+        time.sleep(0.5)
+        pausa = creadorDeMenues(["VOLVER AL JUEGO","SALIR AL MENU"])
+        if pausa == 0:
+            g = 1
+            dibujarLaberinto(laberinto)
+            pausa = 2
+        else:
+            pausa = 2
+            volverAlMenu = True
+            listenerJuego.stop()  
 
 def reset(key = None):
     global teclaPresionada,c
@@ -499,26 +538,38 @@ def escribirHistoria(texto, vertical = False, color = Fore.LIGHTWHITE_EX):
     else:
         efectoMaquina(centrarV(centrarH(color + texto)))
     time.sleep(1)
+    
+pantallaIncio()
 while True: 
     nivel = 0
+    totalTiempo = 0
     
-    pantallaIncio()
     
-    select = creadorDeMenues(["JUGAR HISTORIA","MULTIJUGADOR","SALIR"])
+    select = creadorDeMenues(["JUGAR HISTORIA","MULTIJUGADOR","TOP JUGADORES","SALIR"])
     if select == 0:
         print()
-        dificultad = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","EXPERTO","VOLVER"])
+        dificultad = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","EXPERTO","VOLVER AL MENU"])
+        
+        if dificultad == 3:
+            continue 
+        
         os.system("cls")
         
-        nombreJugador = pedirInfo(Fore.LIGHTWHITE_EX + "Ingresa tu nombre, explorador: ",True)
+        nombreJugador = pedirInfo(Fore.LIGHTWHITE_EX + "Ingresa tu nombre, explorador(No mas de 15 caracteres): ",True)
+        nombreJugador = nombreJugador[:15]
         anno = pedirInfo("Ingresa tu curso(numero y letra): ")
+        anno = anno[:2]
+        
+        os.system("cls")
+        
+        escribirHistoria("¡INTENTA PASAR LA HISTORIA EN POCO TIEMPO, Y QUIZAS TE LLEVES ALGUN PREMIO!",True,Fore.GREEN)
         
         os.system("cls")
         espacios = (anchoConsola - len("informacion"))// 2
         saltos = (altoConsola - 11) // 2
         print("\n" * saltos + " " * espacios + Fore.LIGHTMAGENTA_EX + "INFORMACION")
         print()
-        print(espacios * " " + Fore.LIGHTWHITE_EX + "W/↑: ARRIBA" + "\n" + espacios * " "  + "S/↓: ABAJO" + "\n" + espacios * " " + "D/→: DERECHA" + "\n" + espacios * " " + "A/←: IZQUIERDA")
+        print(espacios * " " + Fore.LIGHTWHITE_EX + "W/↑: ARRIBA" + "\n" + espacios * " "  + "S/↓: ABAJO" + "\n" + espacios * " " + "D/→: DERECHA" + "\n" + espacios * " " + "A/←: IZQUIERDA" + "\n" + espacios * " " + "P: PAUSA")
         print()
         print(espacios * " " + Fore.GREEN + "X" + Fore.LIGHTWHITE_EX + ":SALIDA" + "\n" + espacios * " " + Fore.RED + "@" + Fore.LIGHTWHITE_EX + ":JUGADOR" + "\n" + espacios * " " + Fore.BLUE + "O" + Fore.LIGHTWHITE_EX + ":POZO")
     
@@ -540,10 +591,17 @@ while True:
         escribirHistoria(f"Y apresúrate en hacerlo en el menor tiempo posible los otros exploradores estan en busca del mismo tesoro. ¡Buena suerte, {nombreJugador}!")
         os.system("cls")
         
+        inicio = time.time()
+        
         if dificultad == 0:
             
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             
             os.system("cls")
             escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,",True)
@@ -554,23 +612,39 @@ while True:
             escribirHistoria("¡Alerta, valiente aventurero! Sumérgete en lo desconocido: un agujero sin visión. ¡Desafía tus sentidos y conquista lo invisible!",True,Fore.LIGHTRED_EX)
             os.system("cls")
             escribirHistoria("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             os.system("cls")
             escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto.",True)
             os.system("cls")
             escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()  
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             os.system("cls")
             escribirHistoria(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.",True)
             os.system("cls")
             
-        elif dificultad == 1:
             
+        elif dificultad == 1:
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
-            
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             
             os.system("cls")
             escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero ten cuidado,  el próximo te puede sorprender con trampas que te harán iniciar de nuevo.",True)
@@ -580,24 +654,40 @@ while True:
             escribirHistoria("¡Alerta, audaz explorador! Sumérgete en lo desconocido: un agujero sin visión. ¡Desafía tus sentidos y conquista lo invisible!",True,Fore.LIGHTRED_EX)
             os.system("cls")
             escribirHistoria("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             os.system("cls")
             escribirHistoria("¿Eso es... una advertencia?",True)
             os.system("cls")
             escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto? CUIDADO!!",True,Fore.LIGHTRED_EX)
             os.system("cls")
             escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()  
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             os.system("cls")
             escribirHistoria(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro",True)
             os.system("cls")
         
         elif dificultad == 2:
-            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             os.system("cls")
             escribirHistoria("Mira!! Has encontrado un mensaje de Atticus",True)
             os.system("cls")
@@ -609,8 +699,14 @@ while True:
             escribirHistoria("¡Atención, valiente explorador! Pozos ocultos: una prueba a ciegas. ¡No te caigas en ellos!",True,Fore.LIGHTRED_EX)
             os.system("cls")
             escribirHistoria("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             os.system("cls")
             escribirHistoria("Aqui!! Otra pista:",True)
             os.system("cls")
@@ -622,20 +718,41 @@ while True:
             os.system("cls")
             escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
             os.system("cls")
+            
+            inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
             jugarNivel()  
+            totalTiempo += time.time() - inicio
+            if volverAlMenu:
+                volverAlMenu = False
+                continue
             escribirHistoria(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.",True)
             os.system("cls")
             
-        elif dificultad == 3:
-            continue    
-            
+            archivoRanking.write(f"{nombreJugador},{anno},{round(totalTiempo,3)}")
+        
+           
+        
     elif select == 1:
         os.system("cls")
         jugarMultijugador()
-    elif select == 2: 
+        
+    elif select == 2:
+        os.system("cls")
+        rank = topJugadores(ranking)
+        rank = rank[:10]
+        centrarH("", 10)
+        print(centrarH("{:>15s} {:>4s} {:>8s}".format("Nombre", "Año","Tiempo(seg)")))
+        print("\n\n")
+        for linea in rank:
+            nombre,ano,puntaje = rank
+            print(centrarH("{:>15s} {:>4s} {:>8s}".format(nombre,ano,puntaje)))
+        
+    elif select == 3: 
         os.system("cls")
         print(centrarH("Muchas Gracias Por Jugar",6))
         break
-    
+
+        
+ranking.close()
 pygame.mixer.quit()

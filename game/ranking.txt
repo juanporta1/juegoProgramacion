@@ -1,0 +1,3 @@
+juan,5a,400
+santi,5a,200
+martin,5a,1000

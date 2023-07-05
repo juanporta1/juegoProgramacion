@@ -150,22 +150,7 @@ def dibujarMultijugador(clon1,clon2):
     print(centrarH(Fore.LIGHTCYAN_EX + "        W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",4))
 
 
-def jugarMultijugador():
-    global clon1,clon2,posInicialYMulti,posInicialXMulti
-    clon1 = []
-    clon2 = []
-    mapaSeleccionado = labs[random.randint(0,2)][random.randint(0,2)]
-    for x in mapaSeleccionado:
-        clon1.append(x.copy())
-        clon2.append(x.copy())
-        
-    posInicialXMulti,posInicialYMulti  = obtenerPosicionDelJugador(clon1)
-    dibujarMultijugador(clon1,clon2)
-    
-    
-    listener = keyboard.Listener(on_press=moverMultijugador, on_release=resetMulti)
-    listener.start()
-    listener.join()
+
 
 def resetMulti(key):
     global teclaPresionada1,teclaPresionada2
@@ -240,8 +225,21 @@ def topJugadores(ranking):
 
     
 
-def moverMultijugador(key):
-        global teclaPresionada1,teclaPresionada2,clon1,clon2
+    
+        
+def jugarMultijugador():
+    global clon1,clon2,posInicialYMulti,posInicialXMulti
+    clon1 = []
+    clon2 = []
+    mapaSeleccionado = labs[random.randint(0,2)][random.randint(0,2)]
+    for x in mapaSeleccionado:
+        clon1.append(x.copy())
+        clon2.append(x.copy())
+        
+    posInicialXMulti,posInicialYMulti  = obtenerPosicionDelJugador(clon1)
+    dibujarMultijugador(clon1,clon2)
+    def moverMultijugador(key):
+        global teclaPresionada1,teclaPresionada2,clon1,clon2,volverAlMenu
         inLab1,inList1 = obtenerPosicionDelJugador(clon1)
         inLab2,inList2 = obtenerPosicionDelJugador(clon2)
         if verificarAtributo(key) == "w" or verificarAtributo(key) == "s" or verificarAtributo(key) == "a" or verificarAtributo(key) == "d":
@@ -254,7 +252,7 @@ def moverMultijugador(key):
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 - 1][inList1] = 5
                 teclaPresionada1 = False
-                listenerJuego.stop()
+                listenerMulti.stop()
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
@@ -279,7 +277,7 @@ def moverMultijugador(key):
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 + 1][inList1] = 5
                 teclaPresionada1 = False
-                listenerJuego.stop()
+                listenerMulti.stop()
                 dibujarMultijugador(clon1,clon2)    
                 time.sleep(1)
                 os.system("cls")
@@ -304,7 +302,7 @@ def moverMultijugador(key):
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 - 1] = 5
                 teclaPresionada1 = False
-                listenerJuego.stop()
+                listenerMulti.stop()
                 dibujarMultijugador(clon1,clon2)            
                 time.sleep(1)
                 os.system("cls")
@@ -330,7 +328,7 @@ def moverMultijugador(key):
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 + 1] = 5
                 teclaPresionada1 = False
-                listenerJuego.stop()    
+                listenerMulti.stop()    
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
@@ -354,7 +352,7 @@ def moverMultijugador(key):
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 - 1][inList2] = 5
                 teclaPresionada2 = False
-                listenerJuego.stop()
+                listenerMulti.stop()
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
@@ -378,7 +376,7 @@ def moverMultijugador(key):
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 + 1][inList2] = 5
                 teclaPresionada2 = False
-                listenerJuego.stop()
+                listenerMulti.stop()
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
@@ -403,7 +401,7 @@ def moverMultijugador(key):
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 - 1] = 5
                 teclaPresionada2 = False
-                listenerJuego.stop()
+                listenerMulti.stop()
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
@@ -426,7 +424,7 @@ def moverMultijugador(key):
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 + 1] = 5
                 teclaPresionada2 = False
-                listenerJuego.stop()    
+                listenerMulti.stop()    
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
@@ -438,7 +436,8 @@ def moverMultijugador(key):
                 teclaPresionada2 = False
                 clon2[posInicialXMulti][posInicialYMulti] = 5
                 dibujarMultijugador(clon1,clon2)
-            elif verificarAtributo(key) == "p":
+                
+            if verificarAtributo(key) == "p":
                 os.system("cls")
                 pausa = creadorDeMenues(["VOLVER AL JUEGO","SALIR AL MENU"])
                 if pausa == 0:
@@ -448,9 +447,11 @@ def moverMultijugador(key):
                 else:
                     pausa = 2
                     volverAlMenu = True
-                    listenerJuego.stop()      
-        
-         
+                    listenerMulti.stop()  
+    
+    listenerMulti = keyboard.Listener(on_press=moverMultijugador, on_release=resetMulti)
+    listenerMulti.start()
+    listenerMulti.join()       
         
 def obtenerPosicionDelJugador(maps):
     for x in maps:
@@ -599,7 +600,7 @@ def efectoMaquina(texto):
         print(caracter, end='', flush=True) 
         escribirSFX[random.randint(0,2)].play()
         ran = 1
-        while ran >= 0.25:
+        while ran >= 0.15:
             ran = random.random()
         time.sleep(math.fabs(ran))
     
@@ -642,10 +643,10 @@ while True:
     totalTiempo = 0
     
     
-    select = creadorDeMenues(["JUGAR HISTORIA","MULTIJUGADOR","TOP JUGADORES","SALIR"])
+    select = creadorDeMenues(["JUGAR HISTORIA","MULTIJUGADOR","TOP JUGADORES\n","SALIR"])
     if select == 0:
         print()
-        dificultad = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","EXPERTO","VOLVER AL MENU"])
+        dificultad = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","EXPERTO\n","VOLVER AL MENU"])
         
         if dificultad == 3:
             continue 
@@ -817,7 +818,7 @@ while True:
             os.system("cls")
             escribirHistoria("¿Eso es un poema?",True)
             os.system("cls")       
-            escribirHistoria("Puertas magicas has de cruzar, pero para ello, su llave necesitaras.",True,Fore.LIGHTRED_EX)
+            escribirHistoria("Un ultimo laberinto has de cruzar, si lo haces, al tesoro llegaras.",True,Fore.LIGHTRED_EX)
             os.system("cls")
             escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
             os.system("cls")
@@ -846,7 +847,7 @@ while True:
     elif select == 2:
         
         while True:
-            seleccion = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","AVANZADO","VOLVER"])
+            seleccion = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","AVANZADO\n","VOLVER"])
             
             if seleccion == 0:
                 with open("rankingPrincipiante.txt", "r") as ranking:
@@ -863,7 +864,4 @@ while True:
         os.system("cls")
         print(centrarH("Muchas Gracias Por Jugar",6))
         break
-
-       
-
 pygame.mixer.quit()

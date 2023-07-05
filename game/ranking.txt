@@ -1,3 +1,4 @@
-juan,5a,400
-santi,5a,200
-martin,5a,1000
+santiagoooo,aa,200000
+juan,aa,200
+jaz,23,1234
+pao,23,2

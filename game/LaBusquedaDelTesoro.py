@@ -8,8 +8,6 @@ os.system('for /F %i in (requerimientos.txt) do pip install %i')
 
 pygame.mixer.init()
 
-archivoRanking = open("rankng.txt", "w+")
-ranking = archivoRanking.readlines()
 anchoConsola, altoConsola = shutil.get_terminal_size()
 select = 0  
 dificultad = 0
@@ -729,7 +727,7 @@ while True:
             escribirHistoria(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.",True)
             os.system("cls")
             
-            archivoRanking.write(f"{nombreJugador},{anno},{round(totalTiempo,3)}")
+            
         
            
         
@@ -738,21 +736,57 @@ while True:
         jugarMultijugador()
         
     elif select == 2:
-        os.system("cls")
-        rank = topJugadores(ranking)
-        rank = rank[:10]
-        centrarH("", 10)
-        print(centrarH("{:>15s} {:>4s} {:>8s}".format("Nombre", "Año","Tiempo(seg)")))
-        print("\n\n")
-        for linea in rank:
-            nombre,ano,puntaje = rank
-            print(centrarH("{:>15s} {:>4s} {:>8s}".format(nombre,ano,puntaje)))
-        
+        with open("ranking.txt", "r") as ranking:
+            os.system("cls")
+            ranking = ranking.readlines()
+            for linea in ranking:
+                linea.strip()
+            rank = topJugadores(ranking)
+            rank = rank[:10]
+            clon = []
+            nombreMasLargo = 0
+            annoMasLargo = 0
+            puntosMasLargo = 0
+            c = 0
+            for lista in rank:
+                clon.append(lista.copy())
+
+            for lista in clon:
+                if c == 0 or nombreMasLargo < len(lista[0]):
+                    nombreMasLargo = len(lista[0])
+                    c += 1
+            c = 0
+            for lista in clon:
+                if c == 0 or annoMasLargo < len(lista[1]):
+                    anoMasLargo = len(lista[1])
+                    c += 1
+            c = 0
+            for lista in clon:
+                if c == 0 or puntosMasLargo < len(str(lista[2])):
+                    puntosMasLargo = len(str(lista[2]))
+                    c += 1
+
+            for i,lista in enumerate(clon):
+                espaciosNombre = " " * (nombreMasLargo - len(lista[0]))
+                lista[0] = lista[0] + espaciosNombre
+                
+                espaciosAno = " " * (annoMasLargo - len(lista[1]))
+                lista[1] = lista[1] + espaciosAno
+                
+                espaciosPuntos = " " * (puntosMasLargo - len(str(lista[2])))
+                lista[2] = lista[2] + espaciosPuntos
+            
+            
+                
+            print(centrarH(f'NOMBRE{" " * nombreMasLargo}AÑO{" " * annoMasLargo}PUNTUACION{" " * puntosMasLargo}',10))
+            for lista in clon:
+                print(centrarH(f'{lista[0]}{lista[1]}{lista[2]}',3))
+            time.sleep(10)
     elif select == 3: 
         os.system("cls")
         print(centrarH("Muchas Gracias Por Jugar",6))
         break
 
         
-ranking.close()
+
 pygame.mixer.quit()

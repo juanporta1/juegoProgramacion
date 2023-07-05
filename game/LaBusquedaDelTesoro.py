@@ -140,7 +140,7 @@ def dibujarMultijugador(clon1,clon2):
     global anchoConsola
     display = "\n\n\n\n\n"
     for i,x in enumerate(clon1):
-        linea =dibujarLinea(x) + "         " + dibujarLinea(clon2[i])
+        linea ="        " + dibujarLinea(x) + "      " + dibujarLinea(clon2[i])
         espacios = (anchoConsola - len(linea)) // 2
         linea = " " * math.trunc((espacios / 1.25)) + linea
         display += linea + "\n"
@@ -172,14 +172,72 @@ def resetMulti(key):
     teclaPresionada1 = True
     teclaPresionada2 = True
     
+def topJugadores(ranking):
+    os.system("cls")
+    ranking = ranking.readlines()
+    for linea in ranking:
+        linea.strip()
 
-def topJugadores(lineas):
     rank = []
-    for linea in lineas:
+    for linea in ranking:
         linea = linea.split(",")
-        rank.append(linea)
-    rank.sort(key=lambda x: float(x[2]),reverse=True)
-    return rank
+        rank.append(linea.copy())
+        for i,linea in enumerate(rank):
+            for j,elem in enumerate(linea):
+                rank[i][j] = elem.rstrip()
+    
+    rank.sort(key=lambda x: float(x[2]))
+    rank = rank[:10]
+    clon = []
+    nombreMasLargo = 0
+    annoMasLargo = 0
+    puntosMasLargo = 0
+    c = 0
+    for lista in rank:
+        clon.append(lista.copy())
+
+    for lista in clon:
+        if c == 0 or nombreMasLargo < len(lista[0]):
+            nombreMasLargo = len(lista[0])
+            c += 1
+    nombreMasLargo += 2
+    c = 0
+    for lista in clon:
+        if c == 0 or annoMasLargo < len(lista[1]):
+            annoMasLargo = len(lista[1])
+            c += 1
+    annoMasLargo += 4
+    c = 0
+    for lista in clon:
+        if c == 0 or puntosMasLargo < len(str(lista[2])):
+            puntosMasLargo = len(str(lista[2]))
+            c += 1
+    puntosMasLargo += 4
+    for i,lista in enumerate(clon):
+
+        clon[i][0] = clon[i][0] + " " * (nombreMasLargo - len(lista[0]))
+        
+        clon[i][1] = clon[i][1] + " " * 4
+
+        clon[i][2] = str(clon[i][2]) 
+        clon[i][2] = clon[i][2] + " " * (puntosMasLargo - len(clon[i][2]))
+        
+    print(centrarH(f'NOMBRE{" " * (nombreMasLargo - len("nombre"))}AÑO{" " * 3}TIEMPO(SEGUNDOS){" " * (puntosMasLargo - len("TIEMPO(SEGUNDOS)"))}',10))
+    print()
+    print()
+    for i,lista in enumerate(clon):
+        print(centrarH(f'{i+1}_   {lista[0]}{lista[1]}{lista[2] + (" " * (len("tiempo(segundos)") - len(lista[2])))}{" " * len(str(i + 1)) + "    "}')) 
+    
+    print(centrarH("PRESIONA SHIFT/CTRL PARA CONTINUAR",3))
+    def continuar(key):
+        if presion(key):
+            listener.stop()
+    listener = keyboard.Listener(on_press=continuar)
+    listener.start()
+    listener.join()
+    
+   
+
     
 
 def moverMultijugador(key):
@@ -198,12 +256,17 @@ def moverMultijugador(key):
                 teclaPresionada1 = False
                 listenerJuego.stop()
                 dibujarMultijugador(clon1,clon2)
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                time.sleep(3)
             elif verificarAtributo(key) == "w" and (clon1[inLab1 - 1][inList1] == 3 or clon1[inLab1 - 1][inList1] == 4) and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 - 1][inList1] = 4
                 clon1[posInicialXMulti][posInicialYMulti] = 5
                 teclaPresionada1 = False
                 dibujarMultijugador(clon1,clon2)
+                
                 
             #* Movimiento Abajo     
             
@@ -218,6 +281,10 @@ def moverMultijugador(key):
                 teclaPresionada1 = False
                 listenerJuego.stop()
                 dibujarMultijugador(clon1,clon2)    
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                time.sleep(3)
             elif verificarAtributo(key) == "s" and (clon1[inLab1 + 1][inList1] == 3 or clon1[inLab1 + 1][inList1] == 4) and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1 + 1][inList1] = 4
@@ -239,6 +306,10 @@ def moverMultijugador(key):
                 teclaPresionada1 = False
                 listenerJuego.stop()
                 dibujarMultijugador(clon1,clon2)            
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                time.sleep(3)
             elif verificarAtributo(key) == "a" and (clon1[inLab1][inList1 - 1] == 3 or clon1[inLab1][inList1 - 1] == 4) and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 - 1] = 4
@@ -261,6 +332,10 @@ def moverMultijugador(key):
                 teclaPresionada1 = False
                 listenerJuego.stop()    
                 dibujarMultijugador(clon1,clon2)
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                time.sleep(3)
             elif verificarAtributo(key) == "d" and (clon1[inLab1][inList1 + 1] == 3 or clon1[inLab1][inList1 + 1] == 4) and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
                 clon1[inLab1][inList1 + 1] = 4
@@ -281,6 +356,10 @@ def moverMultijugador(key):
                 teclaPresionada2 = False
                 listenerJuego.stop()
                 dibujarMultijugador(clon1,clon2)
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                time.sleep(3)
             elif key == keyboard.Key.up and (clon2[inLab2 - 1][inList2] == 3 or clon2[inLab2 - 1][inList2] == 4) and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 - 1][inList2] = 4
@@ -301,6 +380,10 @@ def moverMultijugador(key):
                 teclaPresionada2 = False
                 listenerJuego.stop()
                 dibujarMultijugador(clon1,clon2)
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                time.sleep(3)
             elif key == keyboard.Key.down and (clon2[inLab2 + 1][inList2] == 3 or clon2[inLab2 + 1][inList2] == 4) and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2 + 1][inList2] = 4
@@ -322,6 +405,10 @@ def moverMultijugador(key):
                 teclaPresionada2 = False
                 listenerJuego.stop()
                 dibujarMultijugador(clon1,clon2)
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                time.sleep(3)
             elif key == keyboard.Key.left and (clon2[inLab2][inList2 - 1] == 3 or clon2[inLab2][inList2 - 1] == 4) and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 - 1] = 4
@@ -341,13 +428,27 @@ def moverMultijugador(key):
                 teclaPresionada2 = False
                 listenerJuego.stop()    
                 dibujarMultijugador(clon1,clon2)
+                time.sleep(1)
+                os.system("cls")
+                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                time.sleep(3)
             elif key == keyboard.Key.right and (clon2[inLab2][inList2 + 1] == 3 or clon2[inLab2][inList2 + 1] == 4) and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
                 clon2[inLab2][inList2 + 1] = 4
                 teclaPresionada2 = False
                 clon2[posInicialXMulti][posInicialYMulti] = 5
                 dibujarMultijugador(clon1,clon2)
-                
+            elif verificarAtributo(key) == "p":
+                os.system("cls")
+                pausa = creadorDeMenues(["VOLVER AL JUEGO","SALIR AL MENU"])
+                if pausa == 0:
+                    g = 1
+                    dibujarLaberinto(laberinto)
+                    pausa = 2
+                else:
+                    pausa = 2
+                    volverAlMenu = True
+                    listenerJuego.stop()      
         
          
         
@@ -464,9 +565,7 @@ def moverJugador(key):
         dibujarLaberinto(laberinto)
     
     elif verificarAtributo(key) == "p":
-        time.sleep(0.5)
         os.system("cls")
-        time.sleep(0.5)
         pausa = creadorDeMenues(["VOLVER AL JUEGO","SALIR AL MENU"])
         if pausa == 0:
             g = 1
@@ -635,6 +734,9 @@ while True:
             os.system("cls")
             
             
+            with open("rankingPrincipiante.txt", "a") as archivo:
+                archivo.write(f"\n{nombreJugador},{anno},{round(totalTiempo,2)}")
+            
         elif dificultad == 1:
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -677,7 +779,10 @@ while True:
             os.system("cls")
             escribirHistoria(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro",True)
             os.system("cls")
-        
+            
+            
+            with open("rankingIntermedio.txt", "a") as archivo:
+                archivo.write(f"\n{nombreJugador},{anno},{round(totalTiempo,2)}")
         elif dificultad == 2:
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -728,6 +833,9 @@ while True:
             os.system("cls")
             
             
+            with open("rankingAvanzado.txt", "a") as archivo:
+                archivo.write(f"\n{nombreJugador},{anno},{round(totalTiempo,2)}")
+        
         
            
         
@@ -736,57 +844,26 @@ while True:
         jugarMultijugador()
         
     elif select == 2:
-        with open("ranking.txt", "r") as ranking:
-            os.system("cls")
-            ranking = ranking.readlines()
-            for linea in ranking:
-                linea.strip()
-            rank = topJugadores(ranking)
-            rank = rank[:10]
-            clon = []
-            nombreMasLargo = 0
-            annoMasLargo = 0
-            puntosMasLargo = 0
-            c = 0
-            for lista in rank:
-                clon.append(lista.copy())
-
-            for lista in clon:
-                if c == 0 or nombreMasLargo < len(lista[0]):
-                    nombreMasLargo = len(lista[0])
-                    c += 1
-            c = 0
-            for lista in clon:
-                if c == 0 or annoMasLargo < len(lista[1]):
-                    anoMasLargo = len(lista[1])
-                    c += 1
-            c = 0
-            for lista in clon:
-                if c == 0 or puntosMasLargo < len(str(lista[2])):
-                    puntosMasLargo = len(str(lista[2]))
-                    c += 1
-
-            for i,lista in enumerate(clon):
-                espaciosNombre = " " * (nombreMasLargo - len(lista[0]))
-                lista[0] = lista[0] + espaciosNombre
-                
-                espaciosAno = " " * (annoMasLargo - len(lista[1]))
-                lista[1] = lista[1] + espaciosAno
-                
-                espaciosPuntos = " " * (puntosMasLargo - len(str(lista[2])))
-                lista[2] = lista[2] + espaciosPuntos
+        
+        while True:
+            seleccion = creadorDeMenues(["PRINCIPIANTE","INTERMEDIO","AVANZADO","VOLVER"])
             
-            
-                
-            print(centrarH(f'NOMBRE{" " * nombreMasLargo}AÑO{" " * annoMasLargo}PUNTUACION{" " * puntosMasLargo}',10))
-            for lista in clon:
-                print(centrarH(f'{lista[0]}{lista[1]}{lista[2]}',3))
-            time.sleep(10)
+            if seleccion == 0:
+                with open("rankingPrincipiante.txt", "r") as ranking:
+                    topJugadores(ranking)
+            elif seleccion == 1:
+                with open("rankingIntermedio.txt", "r") as ranking:
+                    topJugadores(ranking)
+            elif seleccion == 2:
+                with open("rankingAvanzado.txt", "r") as ranking:
+                    topJugadores(ranking)
+            elif seleccion == 3:
+                break
     elif select == 3: 
         os.system("cls")
         print(centrarH("Muchas Gracias Por Jugar",6))
         break
 
-        
+       
 
 pygame.mixer.quit()

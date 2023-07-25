@@ -20,6 +20,7 @@ teclaPresionada1 = True
 teclaPresionada2 = True
 volverAlMenu = False
 pausa = 2
+
 #? SFX
 
 escribir1 = pygame.mixer.Sound("sonidos/maquinas/escribir1.wav")
@@ -62,21 +63,22 @@ def creadorDeMenues(ops):
             clon[i] = op + " " * espacios
             
         
-        if key == keyboard.Key.up:
+        if key == keyboard.Key.up or verificarAtributo(key) == "w":
             if selector == 0:
                 selector = len(clon) - 1
             else:
                 selector -= 1
             escribir3.play()
-        if key == keyboard.Key.down:
+        if key == keyboard.Key.down or verificarAtributo(key) == "s":
             if selector == len(clon) - 1:
                 selector = 0
             else:
                 selector += 1
             escribir2.play()
-        if presion(key):
+        if key == keyboard.Key.enter:
             escribir1.play()  
             listener.stop()
+            input()
             
             
         os.system("cls")
@@ -88,7 +90,7 @@ def creadorDeMenues(ops):
             else:
                 print(centrarH(Fore.CYAN + "-> " + clon[selector]))
                 
-        print(centrarH("PRESIONE SHIFT/CTRL PARA SELECCIONAR", 3))
+        print(centrarH("PRESIONE ENTER PARA SELECCIONAR", 3))
 
     
     
@@ -147,7 +149,7 @@ def dibujarMultijugador(clon1,clon2):
     
     os.system("cls")
     print(display)
-    print(centrarH(Fore.LIGHTCYAN_EX + "        W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",4))
+    print(centrarH(Fore.LIGHTCYAN_EX + "        W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA  P:MENU DE PAUSA",4))
 
 
 
@@ -207,13 +209,13 @@ def topJugadores(ranking):
         clon[i][2] = str(clon[i][2]) 
         clon[i][2] = clon[i][2] + " " * (puntosMasLargo - len(clon[i][2]))
         
-    print(centrarH(f'NOMBRE{" " * (nombreMasLargo - len("nombre"))}AÑO{" " * 3}TIEMPO(SEGUNDOS){" " * (puntosMasLargo - len("TIEMPO(SEGUNDOS)"))}',10))
+    print(centrarH(Fore.CYAN + f'NOMBRE{" " * (nombreMasLargo - len("nombre"))}AÑO{" " * 3}TIEMPO(SEGUNDOS){" " * (puntosMasLargo - len("TIEMPO(SEGUNDOS)"))}',10))
     print()
     print()
     for i,lista in enumerate(clon):
-        print(centrarH(f'{i+1}_   {lista[0]}{lista[1]}{lista[2] + (" " * (len("tiempo(segundos)") - len(lista[2])))}{" " * len(str(i + 1)) + "    "}')) 
+        print(centrarH(Fore.LIGHTBLACK_EX+ f'{i+1}_   {lista[0]}{lista[1]}{lista[2] + (" " * (len("tiempo(segundos)") - len(lista[2])))}{" " * len(str(i + 1)) + "    "}')) 
     
-    print(centrarH("PRESIONA SHIFT/CTRL PARA CONTINUAR",3))
+    print(centrarH(Fore.CYAN + "PRESIONA SHIFT/CTRL PARA CONTINUAR",3))
     def continuar(key):
         if presion(key):
             listener.stop()
@@ -436,18 +438,7 @@ def jugarMultijugador():
                 teclaPresionada2 = False
                 clon2[posInicialXMulti][posInicialYMulti] = 5
                 dibujarMultijugador(clon1,clon2)
-                
-            if verificarAtributo(key) == "p":
-                os.system("cls")
-                pausa = creadorDeMenues(["VOLVER AL JUEGO","SALIR AL MENU"])
-                if pausa == 0:
-                    g = 1
-                    dibujarLaberinto(laberinto)
-                    pausa = 2
-                else:
-                    pausa = 2
-                    volverAlMenu = True
-                    listenerMulti.stop()  
+ 
     
     listenerMulti = keyboard.Listener(on_press=moverMultijugador, on_release=resetMulti)
     listenerMulti.start()
@@ -563,19 +554,7 @@ def moverJugador(key):
         print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
         print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO,Y HAS VUELTO A LA ENTRADA \n TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
-        dibujarLaberinto(laberinto)
-    
-    elif verificarAtributo(key) == "p":
-        os.system("cls")
-        pausa = creadorDeMenues(["VOLVER AL JUEGO","SALIR AL MENU"])
-        if pausa == 0:
-            g = 1
-            dibujarLaberinto(laberinto)
-            pausa = 2
-        else:
-            pausa = 2
-            volverAlMenu = True
-            listenerJuego.stop()  
+        dibujarLaberinto(laberinto) 
 
 def reset(key = None):
     global teclaPresionada,c
@@ -619,11 +598,12 @@ def pedirInfo(texto,centrarVer = False):
 
 def pantallaIncio():
     os.system("cls")
-    print(centrarV(centrarH(Fore.CYAN + "PRESIONE SHIFT/CTRL PARA COMENZAR")))
+    print(centrarV(centrarH(Fore.CYAN + "PRESIONE ENTER PARA COMENZAR")))
     def click(key):
         
-        if presion(key):
+        if key == keyboard.Key.enter:
             listener.stop()
+            input()
     listener = keyboard.Listener(on_press=click)
     listener.start()
     listener.join()
@@ -651,12 +631,20 @@ while True:
         if dificultad == 3:
             continue 
         
-        os.system("cls")
         
-        nombreJugador = pedirInfo(Fore.LIGHTWHITE_EX + "Ingresa tu nombre, explorador(No mas de 15 caracteres): ",True)
-        nombreJugador = nombreJugador[:15]
-        anno = pedirInfo("Ingresa tu curso(numero y letra): ")
-        anno = anno[:2]
+        os.system("cls")
+        time.sleep(.1)
+        while True:
+            nombreJugador = pedirInfo(Fore.LIGHTWHITE_EX + "Ingresa tu nombre, explorador(No mas de 15 caracteres): ",True)
+            nombreJugador = nombreJugador[:15]
+            anno = pedirInfo("Ingresa tu curso(numero y letra): ")
+            anno = anno[:2]
+            
+            info = creadorDeMenues(["LA INFORMACION ES CORRECTA","LA INFORMACION ES INCORRECTA"])
+            
+            if info == 0:
+                break
+            
         
         os.system("cls")
         
@@ -667,7 +655,7 @@ while True:
         saltos = (altoConsola - 11) // 2
         print("\n" * saltos + " " * espacios + Fore.LIGHTMAGENTA_EX + "INFORMACION")
         print()
-        print(espacios * " " + Fore.LIGHTWHITE_EX + "W/↑: ARRIBA" + "\n" + espacios * " "  + "S/↓: ABAJO" + "\n" + espacios * " " + "D/→: DERECHA" + "\n" + espacios * " " + "A/←: IZQUIERDA" + "\n" + espacios * " " + "P: PAUSA")
+        print(espacios * " " + Fore.LIGHTWHITE_EX + "W/↑: ARRIBA" + "\n" + espacios * " "  + "S/↓: ABAJO" + "\n" + espacios * " " + "D/→: DERECHA" + "\n" + espacios * " " + "A/←: IZQUIERDA" + "\n")
         print()
         print(espacios * " " + Fore.GREEN + "X" + Fore.LIGHTWHITE_EX + ":SALIDA" + "\n" + espacios * " " + Fore.RED + "@" + Fore.LIGHTWHITE_EX + ":JUGADOR" + "\n" + espacios * " " + Fore.BLUE + "O" + Fore.LIGHTWHITE_EX + ":POZO")
     

@@ -3,6 +3,7 @@ from pynput import keyboard
 from colorama import Fore,Back,Style
 from niveles import labs
 import math,random
+import re
 
 os.system('for /F %i in (requerimientos.txt) do pip install %i')
 
@@ -31,15 +32,33 @@ finalescribir = pygame.mixer.Sound("sonidos/maquinas/finalescribir.wav")
 escribirSFX = [escribir1, escribir2, escribir3]
 
 #Funciones para centrar en la consola
-def centrarH(mensaje, bajadas = 0):
-    espacios = (anchoConsola - len(mensaje)) // 2
-    mensaje = "\n" * bajadas + " "  * espacios + mensaje
-    return mensaje
+def centrar(mensaje, bajadas = 1):
+    c = 0
+    for i in mensaje:
+        if i == "\n":
+            c += 1
+    expresionesRegulares = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    aux = expresionesRegulares.sub('', mensaje)
+        
+       
+    if c != 0 and bajadas == 1:
+        espacios = (anchoConsola - len(aux)) // 2
+        bajadas = (altoConsola - c) // 2
+        mensaje = "\n" * bajadas + " " * espacios + mensaje 
+        
+    elif bajadas == 2:
+        espacios = (anchoConsola - len(aux)) // 2
+        bajadas = (altoConsola - 1) // 2
+        mensaje = "\n" * bajadas + " " * espacios + mensaje 
+        
+    else:
+        espacios = (anchoConsola - len(aux)) // 2
+        mensaje = " " * espacios + mensaje 
+    if mensaje != None:
+        return mensaje
+  
 
-def centrarV(mensaje):
-    bajadas = (altoConsola - 1) // 2
-    mensaje = "\n" * bajadas  + mensaje
-    return mensaje
+
 
 def presion(key):
     if key == keyboard.Key.delete or key == keyboard.Key.ctrl_l or key == keyboard.Key.alt_l or key == keyboard.Key.shift or key == keyboard.Key.alt_r or key == keyboard.Key.alt_gr or key == keyboard.Key.ctrl_r or key == keyboard.Key.shift_l or key == keyboard.Key.shift_r:
@@ -82,16 +101,17 @@ def creadorDeMenues(ops):
             
             
         os.system("cls")
-        print(centrarH(Fore.CYAN + "SELECCIONE UNA OPCION",10))
-        print("\n")
+        display = centrar(Fore.CYAN + "SELECCIONE UNA OPCION",3)
+        display += "\n\n"
         for op in clon:
             if op != clon[selector]:
-                print(centrarH(Fore.CYAN + "   " + op))
+                display += centrar(Fore.CYAN + "   " + op,0) + "\n"
             else:
-                print(centrarH(Fore.CYAN + "-> " + clon[selector]))
-                
-        print(centrarH("PRESIONE ENTER PARA SELECCIONAR", 3))
-
+                display += centrar(Fore.CYAN + "-> " + clon[selector],0) + "\n"
+        
+        
+        display += "\n\n" + centrar("PRESIONE ENTER PARA SELECCIONAR",3)
+        print(centrar(display))
     
     
     seleccion()
@@ -127,29 +147,27 @@ def dibujarLaberinto(maps):
     #? 5 = Jugador
     global ancho
     ancho,_ = shutil.get_terminal_size()
-    display = "\n\n\n\n\n\n\n"
+    display = ""
     for x in maps:
-        linea = dibujarLinea(x)
-        espacios = (ancho - len(x))// 2
-        linea = " " * math.trunc((espacios / 1.25)) + linea
+        linea = centrar(dibujarLinea(x),0)
         display += linea + "\n"
     os.system("cls")
-    print(display)
-    print(centrarH(Fore.LIGHTCYAN_EX + "        W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",4))
+    display += "\n\n" + centrar(Fore.LIGHTCYAN_EX + "W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",3)
+    print(centrar(display))
+    
     
     
 def dibujarMultijugador(clon1,clon2):
     global anchoConsola
-    display = "\n\n\n\n\n"
+    display = ""
     for i,x in enumerate(clon1):
-        linea ="        " + dibujarLinea(x) + "      " + dibujarLinea(clon2[i])
-        espacios = (anchoConsola - len(linea)) // 2
-        linea = " " * math.trunc((espacios / 1.25)) + linea
+        linea = centrar(dibujarLinea(x) + "            " + dibujarLinea(clon2[i]),0)
         display += linea + "\n"
     
     os.system("cls")
-    print(display)
-    print(centrarH(Fore.LIGHTCYAN_EX + "        W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA  P:MENU DE PAUSA",4))
+    display += "\n\n\n" +  Fore.LIGHTCYAN_EX + centrar("W/↑:ARRIBA  S/↓:ABAJO  A/←:IZQUIERDA  D/→:DERECHA",3)
+    print(centrar(display))
+    
 
 
 
@@ -209,16 +227,19 @@ def topJugadores(ranking):
         clon[i][2] = str(clon[i][2]) 
         clon[i][2] = clon[i][2] + " " * (puntosMasLargo - len(clon[i][2]))
         
-    print(centrarH(Fore.CYAN + f'NOMBRE{" " * (nombreMasLargo - len("nombre"))}AÑO{" " * 3}TIEMPO(SEGUNDOS){" " * (puntosMasLargo - len("TIEMPO(SEGUNDOS)"))}',10))
-    print()
-    print()
-    for i,lista in enumerate(clon):
-        print(centrarH(Fore.LIGHTBLACK_EX+ f'{i+1}_   {lista[0]}{lista[1]}{lista[2] + (" " * (len("tiempo(segundos)") - len(lista[2])))}{" " * len(str(i + 1)) + "    "}')) 
+    display = centrar(Fore.CYAN + f'NOMBRE{" " * (nombreMasLargo - len("nombre"))}AÑO{" " * 3}TIEMPO(SEGUNDOS){" " * (puntosMasLargo - len("TIEMPO(SEGUNDOS)"))}')
+    display += "\n\n\n"
     
-    print(centrarH(Fore.CYAN + "PRESIONA SHIFT/CTRL PARA CONTINUAR",3))
+    for i,lista in enumerate(clon):
+        display += centrar(Fore.LIGHTBLACK_EX+ f'{i+1}_   {lista[0]}{lista[1]}{lista[2] + (" " * (len("tiempo(segundos)") - len(lista[2])))}{" " * len(str(i + 1)) + "    "}') 
+        display += "\n"
+    display += "\n\n" + Fore.CYAN + centrar("PRESIONA ENTER PARA CONTINUAR")
+    
+    print(centrar(display))
     def continuar(key):
-        if presion(key):
+        if key == keyboard.Key.enter:
             listener.stop()
+            input()
     listener = keyboard.Listener(on_press=continuar)
     listener.start()
     listener.join()
@@ -233,7 +254,7 @@ def jugarMultijugador():
     global clon1,clon2,posInicialYMulti,posInicialXMulti
     clon1 = []
     clon2 = []
-    mapaSeleccionado = labs[random.randint(0,2)][random.randint(0,2)]
+    mapaSeleccionado = labs[random.randint(0,1)][random.randint(0,2)]
     for x in mapaSeleccionado:
         clon1.append(x.copy())
         clon2.append(x.copy())
@@ -258,7 +279,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 1! Has Ganado",2)) 
                 time.sleep(3)
             elif verificarAtributo(key) == "w" and (clon1[inLab1 - 1][inList1] == 3 or clon1[inLab1 - 1][inList1] == 4) and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
@@ -283,7 +304,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)    
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 1! Has Ganado",2)) 
                 time.sleep(3)
             elif verificarAtributo(key) == "s" and (clon1[inLab1 + 1][inList1] == 3 or clon1[inLab1 + 1][inList1] == 4) and teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
@@ -308,7 +329,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)            
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 1! Has Ganado",2)) 
                 time.sleep(3)
             elif verificarAtributo(key) == "a" and (clon1[inLab1][inList1 - 1] == 3 or clon1[inLab1][inList1 - 1] == 4) and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
@@ -334,7 +355,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 1! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 1! Has Ganado",2)) 
                 time.sleep(3)
             elif verificarAtributo(key) == "d" and (clon1[inLab1][inList1 + 1] == 3 or clon1[inLab1][inList1 + 1] == 4) and  teclaPresionada1 == True:
                 clon1[inLab1][inList1] = 0
@@ -358,7 +379,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 2! Has Ganado",2)) 
                 time.sleep(3)
             elif key == keyboard.Key.up and (clon2[inLab2 - 1][inList2] == 3 or clon2[inLab2 - 1][inList2] == 4) and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
@@ -382,7 +403,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 2! Has Ganado",2)) 
                 time.sleep(3)
             elif key == keyboard.Key.down and (clon2[inLab2 + 1][inList2] == 3 or clon2[inLab2 + 1][inList2] == 4) and teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
@@ -407,7 +428,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 2! Has Ganado",2)) 
                 time.sleep(3)
             elif key == keyboard.Key.left and (clon2[inLab2][inList2 - 1] == 3 or clon2[inLab2][inList2 - 1] == 4) and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
@@ -430,7 +451,7 @@ def jugarMultijugador():
                 dibujarMultijugador(clon1,clon2)
                 time.sleep(1)
                 os.system("cls")
-                print(centrarV(centrarH("¡Felicidades Jugador 2! Has Ganado")))
+                print(centrar("¡Felicidades Jugador 2! Has Ganado",2)) 
                 time.sleep(3)
             elif key == keyboard.Key.right and (clon2[inLab2][inList2 + 1] == 3 or clon2[inLab2][inList2 + 1] == 4) and  teclaPresionada2 == True:
                 clon2[inLab2][inList2] = 0
@@ -481,8 +502,8 @@ def moverJugador(key):
         laberinto[posInicialX][posInicialY] = 5
         teclaPresionada = False
         os.system("cls")
-        print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
-        print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
+        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"')) 
+        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
         dibujarLaberinto(laberinto)
     #* Movimiento Abajo     
@@ -504,8 +525,8 @@ def moverJugador(key):
         teclaPresionada = False
         laberinto[posInicialX][posInicialY] = 5
         os.system("cls")
-        print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
-        print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
+        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"')) 
+        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
         dibujarLaberinto(laberinto)
     #* Movimiento Izquierda
@@ -528,8 +549,8 @@ def moverJugador(key):
         teclaPresionada = False
         laberinto[posInicialX][posInicialY] = 5
         os.system("cls")
-        print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
-        print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
+        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"'))
+        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
         dibujarLaberinto(laberinto)
     #* Movimiento Derecha 
@@ -551,8 +572,8 @@ def moverJugador(key):
         teclaPresionada = False
         laberinto[posInicialX][posInicialY] = 5
         os.system("cls")
-        print(centrarV(centrarH('"AHHHHHHHHHHHHHHHHH!!!"')))
-        print(centrarH("OH NO!, TE HAS CAIDO EN UN POZO,Y HAS VUELTO A LA ENTRADA \n TEN CUIDADO LA PROXIMA."))
+        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"'))
+        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO,Y HAS VUELTO A LA ENTRADA \n TEN CUIDADO LA PROXIMA."))
         time.sleep(3)
         dibujarLaberinto(laberinto) 
 
@@ -576,6 +597,8 @@ def efectoMaquina(texto):
         if caracter == " " or caracter == "\n":
             print(caracter, end='', flush=True)
             continue
+        elif caracter == None:
+            continue
         print(caracter, end='', flush=True) 
         escribirSFX[random.randint(0,2)].play()
         ran = 1
@@ -588,17 +611,17 @@ def efectoMaquina(texto):
     print() 
 
 def pedirInfo(texto,centrarVer = False):
-    if centrarVer == False:
-        texto = centrarH(texto)
+    if centrarVer == True:
+        texto = centrar("\n" + centrar(texto,0),2)
         var = input(texto)
     else:
-        texto = centrarV(centrarH(texto))
+        texto = centrar(texto,0)
         var = input(texto)
     return var
 
 def pantallaIncio():
     os.system("cls")
-    print(centrarV(centrarH(Fore.CYAN + "PRESIONE ENTER PARA COMENZAR")))
+    print(centrar(Fore.CYAN + "PRESIONE ENTER PARA COMENZAR\n"))
     def click(key):
         
         if key == keyboard.Key.enter:
@@ -610,11 +633,10 @@ def pantallaIncio():
     
     
 def escribirHistoria(texto, vertical = False, color = Fore.LIGHTWHITE_EX):
-    if vertical == False:
-        efectoMaquina(centrarH(color + texto))
-        print()
+    if vertical:
+        efectoMaquina(centrar(color + texto,2))
     else:
-        efectoMaquina(centrarV(centrarH(color + texto)))
+        efectoMaquina(centrar(color + texto))
     time.sleep(1)
     
 pantallaIncio()
@@ -637,7 +659,7 @@ while True:
         while True:
             nombreJugador = pedirInfo(Fore.LIGHTWHITE_EX + "Ingresa tu nombre, explorador(No mas de 15 caracteres): ",True)
             nombreJugador = nombreJugador[:15]
-            anno = pedirInfo("Ingresa tu curso(numero y letra): ")
+            anno = pedirInfo("Ingresa tu curso(numero y letra): ",0)
             anno = anno[:2]
             
             info = creadorDeMenues(["LA INFORMACION ES CORRECTA","LA INFORMACION ES INCORRECTA"])
@@ -672,7 +694,7 @@ while True:
         os.system("cls")
         escribirHistoria("Atticus dejó obstáculos peligrosos en su camino para desviar a aquellos que buscaran el tesoro y poner a prueba su coraje y astucia.",True)
         os.system("cls")
-        escribirHistoria("La historia de tu búsqueda del tesoro está por comenzar. ",True)
+        escribirHistoria("La historia de tu búsqueda del tesoro está por comenzar.",True)
         escribirHistoria("Tú eliges el camino que tomarás y las cosas emocionantes que descubrirás.")
         escribirHistoria(f"Y apresúrate en hacerlo en el menor tiempo posible los otros exploradores estan en busca del mismo tesoro. ¡Buena suerte, {nombreJugador}!")
         os.system("cls")
@@ -690,7 +712,7 @@ while True:
                 continue
             
             os.system("cls")
-            escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,",True)
+            escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado, ",True)
             escribirHistoria("los próximos serán más difíciles, y te encontraras con trampas que te harán volver a la entrada.")
             os.system("cls")
             escribirHistoria("¿Eso es un papel? A ver que dice...",True)
@@ -850,6 +872,6 @@ while True:
                 break
     elif select == 3: 
         os.system("cls")
-        print(centrarH("Muchas Gracias Por Jugar",6))
+        print(centrar("Muchas Gracias Por Jugar",6))
         break
 pygame.mixer.quit()

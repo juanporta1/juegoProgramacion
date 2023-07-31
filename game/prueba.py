@@ -1,6 +1,3 @@
+string = "Hola Mundo"
 
-p = "holaaaa\n"
-
-g = "chauuuu"
-
-print(p.removesuffix("\n")+g)
+print(string[3])

@@ -1,12 +1,13 @@
+import os
+os.system('for /F %i in (requerimientos.txt) do pip install %i')
 import os,time,pygame,shutil,copy
 from pynput import keyboard
-from colorama import Fore,Back,Style
+from colorama import Fore,Back,Style,init
 from niveles import labs
 import math,random
 import re
 
-os.system('for /F %i in (requerimientos.txt) do pip install %i')
-
+init()
 pygame.mixer.init()
 
 anchoConsola, altoConsola = shutil.get_terminal_size()
@@ -502,8 +503,7 @@ def moverJugador(key):
         laberinto[posInicialX][posInicialY] = 5
         teclaPresionada = False
         os.system("cls")
-        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"')) 
-        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
+        print(centrar(centrar('"AHHHHHHHHHHHHHHHHH!!!"') + "\n" + centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))) 
         time.sleep(3)
         dibujarLaberinto(laberinto)
     #* Movimiento Abajo     
@@ -525,8 +525,7 @@ def moverJugador(key):
         teclaPresionada = False
         laberinto[posInicialX][posInicialY] = 5
         os.system("cls")
-        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"')) 
-        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
+        print(centrar(centrar('"AHHHHHHHHHHHHHHHHH!!!"') + "\n" + centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA.")))
         time.sleep(3)
         dibujarLaberinto(laberinto)
     #* Movimiento Izquierda
@@ -549,8 +548,7 @@ def moverJugador(key):
         teclaPresionada = False
         laberinto[posInicialX][posInicialY] = 5
         os.system("cls")
-        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"'))
-        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA."))
+        print(centrar(centrar('"AHHHHHHHHHHHHHHHHH!!!"') + "\n" + centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA.")))
         time.sleep(3)
         dibujarLaberinto(laberinto)
     #* Movimiento Derecha 
@@ -572,8 +570,7 @@ def moverJugador(key):
         teclaPresionada = False
         laberinto[posInicialX][posInicialY] = 5
         os.system("cls")
-        print(centrar('"AHHHHHHHHHHHHHHHHH!!!"'))
-        print(centrar("OH NO!, TE HAS CAIDO EN UN POZO,Y HAS VUELTO A LA ENTRADA \n TEN CUIDADO LA PROXIMA."))
+        print(centrar(centrar('"AHHHHHHHHHHHHHHHHH!!!"') + "\n" + centrar("OH NO!, TE HAS CAIDO EN UN POZO, TEN CUIDADO LA PROXIMA.")))
         time.sleep(3)
         dibujarLaberinto(laberinto) 
 
@@ -806,7 +803,7 @@ while True:
             escribirHistoria("Mira!! Has encontrado un mensaje de Atticus",True)
             os.system("cls")
             escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,",True)
-            escribirHistoria("los próximos serán más difíciles, y te encontraras con trampas que te harán volver a la entrada")
+            escribirHistoria("los próximos serán más difíciles, y te encontraras con mas pozos, mira por donde caminas")
             os.system("cls")
             escribirHistoria("Aquello es.. ¡Una Pista!",True)
             os.system("cls")
@@ -840,6 +837,7 @@ while True:
             if volverAlMenu:
                 volverAlMenu = False
                 continue
+            os.system("cls")
             escribirHistoria(f"¡Felicitaciones! {nombreJugador} haz logrado cruzar todos los laberintos y encontrar el tesoro.",True)
             os.system("cls")
             

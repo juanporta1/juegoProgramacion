@@ -616,9 +616,9 @@ def pedirInfo(texto,centrarVer = False):
         var = input(texto)
     return var
 
-def pantallaIncio():
+def pantallaIncio(texto = "PRESIONE ENTER PARA COMENZAR\n"):
     os.system("cls")
-    print(centrar(Fore.CYAN + "PRESIONE ENTER PARA COMENZAR\n"))
+    print(centrar(Fore.CYAN + texto))
     def click(key):
         
         if key == keyboard.Key.enter:
@@ -773,7 +773,7 @@ while True:
             os.system("cls")
             escribirHistoria("¿Eso es... una advertencia?",True)
             os.system("cls")
-            escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto? CUIDADO!!",True,Fore.LIGHTRED_EX)
+            escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto?",True,Fore.LIGHTRED_EX)
             os.system("cls")
             escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             
@@ -844,10 +844,11 @@ while True:
             
             with open("rankingAvanzado.txt", "a") as archivo:
                 archivo.write(f"\n{nombreJugador},{anno},{round(totalTiempo,2)}")
+        elif dificultad == 3:
+            continue
         
         
-           
-        
+        pantallaIncio("PRESIONE ENTER PARA VOLVER AL MENU\n")   
     elif select == 1:
         os.system("cls")
         jugarMultijugador()

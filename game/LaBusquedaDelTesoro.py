@@ -667,7 +667,7 @@ while True:
         
         os.system("cls")
         
-        escribirHistoria("¡INTENTA PASAR LA HISTORIA EN POCO TIEMPO, Y QUIZAS TE LLEVES ALGUN PREMIO!",True,Fore.GREEN)
+        escribirHistoria("¡INTENTA PASAR LA HISTORIA EN EL MENOR TIEMPO POSIBLE Y LLEGAR AL TESORO ANTES QUE NADIE!",True,Fore.GREEN)
         
         os.system("cls")
         espacios = (anchoConsola - len("informacion"))// 2
@@ -682,18 +682,18 @@ while True:
         
         
         os.system("cls")
-        escribirHistoria(f"{nombreJugador}, estás adentrándote en una selva en busca de un tesoro muy especial.",True)
+        escribirHistoria(f"{nombreJugador}, Estás adentrándote en una selva, un tesoro muy especial te espera al final!.",True)
         
         os.system("cls")
-        escribirHistoria("Cuenta la leyenda que hace mucho tiempo un antiguo explorador, llamado Atticus,",True)
+        escribirHistoria("Hace mucho tiempo, un antiguo explorador llamado Atticus",True)
         escribirHistoria("escondió su tesoro mágico en las profundidades de la selva.")
-        escribirHistoria("Este, decidió proteger el tesoro para que solo los aventureros más valientes y dignos pudieran encontrarlo.")
+        escribirHistoria("Decidió protegerlo con pozos ocultos para que solo los aventureros más valientes y astutos pudieran encontrarlo.")
         os.system("cls")
-        escribirHistoria("Atticus dejó obstáculos peligrosos en su camino para desviar a aquellos que buscaran el tesoro y poner a prueba su coraje y astucia.",True)
+        escribirHistoria("Atticus dejó obstáculos peligrosos en su camino para desviar a aquellos que buscaran el tesoro y ponerlos a prueba",True)
         os.system("cls")
-        escribirHistoria("La historia de tu búsqueda del tesoro está por comenzar.",True)
-        escribirHistoria("Tú eliges el camino que tomarás y las cosas emocionantes que descubrirás.")
-        escribirHistoria(f"Y apresúrate en hacerlo en el menor tiempo posible los otros exploradores estan en busca del mismo tesoro. ¡Buena suerte, {nombreJugador}!")
+        escribirHistoria("La historia de tu búsqueda del tesoro acaba de comenzar.",True)
+        escribirHistoria("Tú eliges el camino que tomarás y que cosas emocionantes descubrirás.")
+        escribirHistoria(f"Es una carrera contra reloj, muchos exploradores estan en busca del mismo tesoro. ¡Buena suerte, {nombreJugador}!")
         os.system("cls")
         
         inicio = time.time()
@@ -710,13 +710,13 @@ while True:
             
             os.system("cls")
             escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado, ",True)
-            escribirHistoria("los próximos serán más difíciles, y te encontraras con trampas que te harán volver a la entrada.")
+            escribirHistoria("los próximos serán más difíciles. No te des por vencido")
             os.system("cls")
             escribirHistoria("¿Eso es un papel? A ver que dice...",True)
             os.system("cls")
             escribirHistoria("¡Alerta, valiente aventurero! Sumérgete en lo desconocido: un agujero sin visión. ¡Desafía tus sentidos y conquista lo invisible!",True,Fore.LIGHTRED_EX)
             os.system("cls")
-            escribirHistoria("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -728,7 +728,7 @@ while True:
             os.system("cls")
             escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto.",True)
             os.system("cls")
-            escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -755,13 +755,13 @@ while True:
                 continue
             
             os.system("cls")
-            escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero ten cuidado,  el próximo te puede sorprender con trampas que te harán iniciar de nuevo.",True)
+            escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero ten cuidado,  el próximo te puede sorprender con más trampas que te harán iniciar de nuevo.",True)
             os.system("cls")
             escribirHistoria("Mira!! Alli!! Una pista de Atticus.",True)
             os.system("cls")
             escribirHistoria("¡Alerta, audaz explorador! Sumérgete en lo desconocido: un agujero sin visión. ¡Desafía tus sentidos y conquista lo invisible!",True,Fore.LIGHTRED_EX)
             os.system("cls")
-            escribirHistoria("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -775,7 +775,7 @@ while True:
             os.system("cls")
             escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, ¿podras cruzar el siguiente laberinto? CUIDADO!!",True,Fore.LIGHTRED_EX)
             os.system("cls")
-            escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -803,13 +803,13 @@ while True:
             escribirHistoria("Mira!! Has encontrado un mensaje de Atticus",True)
             os.system("cls")
             escribirHistoria("¡Bien hecho! Haz logrado pasar el primer laberinto, pero cuidado,",True)
-            escribirHistoria("los próximos serán más difíciles, y te encontraras con mas pozos, mira por donde caminas")
+            escribirHistoria("los próximos serán más difíciles, y te encontraras con múltiples trampas que te harán volver a la entrada")
             os.system("cls")
             escribirHistoria("Aquello es.. ¡Una Pista!",True)
             os.system("cls")
             escribirHistoria("¡Atención, valiente explorador! Pozos ocultos: una prueba a ciegas. ¡No te caigas en ellos!",True,Fore.LIGHTRED_EX)
             os.system("cls")
-            escribirHistoria("HAS PASADO EL PRIMER LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             
             inicio = time.time()
             dibujarLaberinto(labs[dificultad][nivel])
@@ -821,13 +821,13 @@ while True:
             os.system("cls")
             escribirHistoria("Aqui!! Otra pista:",True)
             os.system("cls")
-            escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, pero ahora será más difícil ten cuidado.",True)
+            escribirHistoria("¡Bien hecho! Ahora estas a un solo paso de llegar al tesoro, pero ahora será más difícil. ¡Ten cuidado!.",True)
             os.system("cls")
             escribirHistoria("¿Eso es un poema?",True)
             os.system("cls")       
             escribirHistoria("Un ultimo laberinto has de cruzar, si lo haces, al tesoro llegaras.",True,Fore.LIGHTRED_EX)
             os.system("cls")
-            escribirHistoria("HAS PASADO EL SEGUNDO LABERINTO, PREPARATE PARA EL PROXIMO DESAFIO",True)
+            escribirHistoria("PREPARATE PARA EL PROXIMO DESAFIO",True)
             os.system("cls")
             
             inicio = time.time()
